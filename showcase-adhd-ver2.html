@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beräkna delen från procentform - ADHD-anpassad</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Verdana', Arial, sans-serif;
+            font-size: 16pt;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #2d3748;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto 0 280px;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .progress-bar {
+            background: #e2e8f0;
+            height: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .points-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #fbbf24;
+            color: #78350f;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 20pt;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+            z-index: 1000;
+        }
+
+        h1 {
+            color: #5a67d8;
+            font-size: 28pt;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #667eea;
+            font-size: 22pt;
+            margin: 30px 0 15px 0;
+            padding: 15px;
+            background: #edf2f7;
+            border-left: 5px solid #667eea;
+            border-radius: 5px;
+        }
+
+        h3 {
+            color: #5a67d8;
+            font-size: 18pt;
+            margin: 20px 0 10px 0;
+        }
+
+        .section {
+            background: #f7fafc;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 15px;
+            border: 3px solid #cbd5e0;
+        }
+
+        .welcome-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            font-size: 18pt;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .welcome-box h2 {
+            color: white;
+            background: none;
+            border: none;
+            padding: 0;
+            margin-bottom: 15px;
+            font-size: 24pt;
+        }
+
+        .page-motivation {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #78350f;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 16pt;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+        }
+
+        .step {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 5px solid #48bb78;
+            position: relative;
+        }
+
+        .step-number {
+            background: #48bb78;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 18pt;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            cursor: pointer;
+        }
+
+        .checkbox {
+            width: 30px;
+            height: 30px;
+            margin-right: 15px;
+            cursor: pointer;
+            transform: scale(1.5);
+        }
+
+        .hint-button {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #78350f;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14pt;
+            font-weight: bold;
+            margin: 10px 0;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .hint-button:hover {
+            transform: scale(1.05);
+        }
+
+        .hint-content {
+            display: none;
+            background: #fef3c7;
+            border: 2px solid #fbbf24;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            animation: slideDown 0.3s ease;
+        }
+
+        .hint-content.active {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .celebration {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 20pt;
+            font-weight: bold;
+            margin: 20px 0;
+            display: none;
+            animation: bounce 0.5s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .break-box {
+            background: linear-gradient(135deg, #fc8181, #f56565);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 20pt;
+            margin: 30px 0;
+            box-shadow: 0 4px 15px rgba(245, 101, 101, 0.3);
+        }
+
+        .break-box h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .calculation-box {
+            background: white;
+            border: 3px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 18pt;
+        }
+
+        .important-box {
+            background: #fef3c7;
+            border: 3px solid #fbbf24;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .problem {
+            background: #edf2f7;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #5a67d8;
+        }
+
+        .problem-number {
+            background: #5a67d8;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 18pt;
+            border: 3px solid #cbd5e0;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea, #5a67d8);
+            color: white;
+            padding: 15px 30px;
+            font-size: 18pt;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 10px 5px;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .whitespace {
+            height: 30px;
+        }
+
+        ul {
+            margin-left: 30px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin: 10px 0;
+        }
+
+        .sticky-reference {
+            position: fixed;
+            left: 20px;
+            top: 100px;
+            background: white;
+            border: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            max-width: 220px;
+        }
+
+        .sticky-reference h4 {
+            color: #5a67d8;
+            font-size: 16pt;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .sticky-reference .samband-item {
+            font-size: 16pt;
+            margin: 8px 0;
+            padding: 8px;
+            background: #edf2f7;
+            border-left: 4px solid #667eea;
+            font-family: 'Courier New', monospace;
+            border-radius: 5px;
+        }
+
+        .page-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .page-tab {
+            background: #edf2f7;
+            color: #4a5568;
+            padding: 12px 20px;
+            border: 2px solid #cbd5e0;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14pt;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .page-tab:hover {
+            background: #e2e8f0;
+        }
+
+        .page-tab.active {
+            background: linear-gradient(135deg, #667eea, #5a67d8);
+            color: white;
+            border-color: #5a67d8;
+        }
+
+        .page-content {
+            display: none;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .nav-button {
+            background: linear-gradient(135deg, #667eea, #5a67d8);
+            color: white;
+            padding: 15px 30px;
+            font-size: 16pt;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-button:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            transform: scale(1.05);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            font-size: 16pt;
+            border: 3px solid #cbd5e0;
+            border-radius: 10px;
+            font-family: 'Verdana', Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="sticky-reference">
+        <h4>Viktiga samband</h4>
+        <div class="samband-item">50% = 1/2</div>
+        <div class="samband-item">25% = 1/4</div>
+        <div class="samband-item">20% = 1/5</div>
+        <div class="samband-item">10% = 1/10</div>
+        <div class="samband-item">1% = 1/100</div>
+    </div>
+
+    <div class="points-display" id="points">&#11088; 0 poäng</div>
+
+    <div class="container">
+        <h1>&#127919; Beräkna delen från procentform</h1>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar">0%</div>
+        </div>
+
+        <!-- FLIKAR FÖR NAVIGATION -->
+        <div class="page-tabs">
+            <button class="page-tab active" onclick="showPage(1)">Del 1: Grunder</button>
+            <button class="page-tab" onclick="showPage(2)">Del 2: Exempel</button>
+            <button class="page-tab" onclick="showPage(3)">Del 3: Övning 1-3</button>
+            <button class="page-tab" onclick="showPage(4)">Del 4: Övning 4-6</button>
+            <button class="page-tab" onclick="showPage(5)">Del 5: Utmaning</button>
+        </div>
+
+        <!-- ==================== DEL 1: GRUNDER ==================== -->
+        <div class="page-content active" id="page1">
+
+            <!-- PERSONLIGT INTRO - ENDAST HÄR -->
+            <div class="welcome-box">
+                <h2>Hej Viggo! &#127918;&#9917;</h2>
+                <p>Hoppas allt är bra! Idag ska du och jag lära oss räkna med procent.</p>
+                <p>Det är superanvändbart - du kommer kunna räkna ut hur mycket du sparar på REA när du köper sneakers, eller hur många V-bucks en rabatt ger dig!</p>
+                <p style="margin-top: 15px; font-weight: bold;">Redo? Då kör vi!</p>
+            </div>
+
+            <div class="page-motivation">
+                &#128161; På den här sidan lär du dig de fem viktigaste sambanden mellan procent och bråk - grunden för allt!
+            </div>
+
+            <h2>&#128218; Del 1: Viktiga samband</h2>
+
+            <div class="section">
+                <div class="important-box">
+                    &#128273; Dessa fem samband är superviktiga! Lär dig dem utantill!
+                </div>
+
+                <div class="calculation-box">
+                    50 % = 1/2<br>
+                    25 % = 1/4<br>
+                    20 % = 1/5<br>
+                    10 % = 1/10<br>
+                    1 % = 1/100
+                </div>
+
+                <button class="hint-button" onclick="toggleHint('hint-samband')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint-samband">
+                    50% är hälften. 25% är en kvart. 10% får du genom att dela på 10!
+                </div>
+
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check1" onchange="checkAnswer('check1', 'celebration1', 5)">
+                    <label for="check1">Jag har läst sambanden</label>
+                </div>
+
+                <div class="celebration" id="celebration1">
+                    &#127881; Bra start! +5 poäng!
+                </div>
+            </div>
+
+            <!-- Exempel i direkt anslutning -->
+            <div class="section">
+                <h3>Exempel: Hushållspengarna</h3>
+                <p>Du tjänade 40 kr på hushållssysslor under veckan.</p>
+                <p>Du bestämde dig för att spara 25 % av pengarna till nya sneakers.</p>
+                <p><strong>Hur mycket sparade du?</strong></p>
+
+                <div class="whitespace"></div>
+
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Vad betyder 25%?</strong><br>
+                    25% = 1/4 (kolla i rutan till vänster!)
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Räkna ut en fjärdedel av 40</strong><br>
+                    40 ÷ 4 = 10
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Svara med hel mening</strong><br>
+                    Du sparade 10 kr.
+                </div>
+
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check2" onchange="checkAnswer('check2', 'celebration2', 5)">
+                    <label for="check2">Jag förstår exemplet</label>
+                </div>
+
+                <div class="celebration" id="celebration2">
+                    &#127881; Jättebra! +5 poäng!
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-button" disabled>&#8592; Föregående</button>
+                <button class="nav-button" onclick="showPage(2)">Nästa &#8594;</button>
+            </div>
+        </div>
+
+        <!-- ==================== DEL 2: FLER EXEMPEL ==================== -->
+        <div class="page-content" id="page2">
+
+            <div class="page-motivation">
+                &#128176; Nu lär du dig räkna ut större procentsatser - perfekt för att kolla om ett Fortnite-erbjudande är värt det!
+            </div>
+
+            <h2>&#128214; Del 2: Fler exempel</h2>
+
+            <!-- RÖRELSEPAUS -->
+            <div class="break-box">
+                <h3>&#127939; Rörelsepaus!</h3>
+                <p>Hoppa 10 gånger! Räkna högt: 1, 2, 3... 10!</p>
+                <div class="checkbox-container" style="justify-content: center;">
+                    <input type="checkbox" class="checkbox" id="break1" onchange="updateProgress()">
+                    <label for="break1" style="color: white;">Jag hoppade!</label>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Exempel a) 40 % av 450 g</h3>
+
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Börja med 10%</strong><br>
+                    10% av 450 g = 450 ÷ 10 = 45 g
+                </div>
+
+                <button class="hint-button" onclick="toggleHint('hint-ex-a')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint-ex-a">
+                    Dela med 10 genom att flytta komma ett steg åt vänster!
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Räkna ut 40%</strong><br>
+                    40% = 4 × 10%<br>
+                    40% av 450 g = 4 × 45 g = 180 g
+                </div>
+
+                <div class="calculation-box">
+                    4 × 45 = ?<br>
+                    4 × 40 = 160<br>
+                    4 × 5 = 20<br>
+                    160 + 20 = 180
+                </div>
+
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check3" onchange="checkAnswer('check3', 'celebration3', 5)">
+                    <label for="check3">Jag förstår hur man räknar 40%</label>
+                </div>
+
+                <div class="celebration" id="celebration3">
+                    &#127919; Perfekt! +5 poäng!
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Exempel b) 6 % av 2 km</h3>
+
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Gör om till meter</strong><br>
+                    2 km = 2000 m
+                </div>
+
+                <button class="hint-button" onclick="toggleHint('hint-ex-b')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint-ex-b">
+                    1 km = 1000 m, så 2 km = 2 × 1000 = 2000 m
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Räkna ut 1%</strong><br>
+                    1% av 2000 m = 2000 ÷ 100 = 20 m
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Räkna ut 6%</strong><br>
+                    6% = 6 × 1%<br>
+                    6% av 2000 m = 6 × 20 m = 120 m
+                </div>
+
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check4" onchange="checkAnswer('check4', 'celebration4', 5)">
+                    <label for="check4">Jag förstår hur man räknar med meter</label>
+                </div>
+
+                <div class="celebration" id="celebration4">
+                    &#128170; Starkt! +5 poäng!
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-button" onclick="showPage(1)">&#8592; Föregående</button>
+                <button class="nav-button" onclick="showPage(3)">Nästa &#8594;</button>
+            </div>
+        </div>
+
+        <!-- ==================== DEL 3: ÖVNINGAR 1-3 ==================== -->
+        <div class="page-content" id="page3">
+
+            <div class="page-motivation">
+                &#9917; Dags att träna! Tänk dig att du räknar ut statistik för Djurgården i Allsvenskan - procent är överallt i fotboll!
+            </div>
+
+            <h2>&#9999;&#65039; Del 3: Övningar (1-3)</h2>
+
+            <!-- RÖRELSEPAUS 2 -->
+            <div class="break-box">
+                <h3>&#129336; Rörelsepaus!</h3>
+                <p>Sträck armarna över huvudet i 10 sekunder!</p>
+                <div class="checkbox-container" style="justify-content: center;">
+                    <input type="checkbox" class="checkbox" id="break2" onchange="updateProgress()">
+                    <label for="break2" style="color: white;">Jag sträckte mig!</label>
+                </div>
+            </div>
+
+            <!-- Problem 169 -->
+            <div class="problem">
+                <div class="problem-number">Uppgift 169</div>
+                <p><strong>Hur stor är delen?</strong></p>
+
+                <p>a) 50 % av 40 Fortnite-skins</p>
+                <button class="hint-button" onclick="toggleHint('hint169a')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint169a">
+                    50% = 1/2. Dela på 2!
+                </div>
+                <input type="text" id="ans169a" placeholder="Ditt svar">
+
+                <p>b) 25 % av 40 Fortnite-skins</p>
+                <button class="hint-button" onclick="toggleHint('hint169b')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint169b">
+                    25% = 1/4. Dela på 4!
+                </div>
+                <input type="text" id="ans169b" placeholder="Ditt svar">
+
+                <p>c) 10 % av 20 fotbollskort</p>
+                <button class="hint-button" onclick="toggleHint('hint169c')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint169c">
+                    10% = 1/10. Dela på 10!
+                </div>
+                <input type="text" id="ans169c" placeholder="Ditt svar">
+
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check169" onchange="checkAnswer('check169', 'celebration169', 10)">
+                    <label for="check169">Jag är klar med uppgift 169</label>
+                </div>
+
+                <div class="celebration" id="celebration169">
+                    &#127775; Suveränt! +10 poäng!
+                </div>
+            </div>
+
+            <!-- Problem 171 -->
+            <div class="problem">
+                <div class="problem-number">Uppgift 171</div>
+                <p><strong>Hur stor är delen?</strong></p>
+
+                <p>a) 20 % av 25 kg</p>
+                <button class="hint-button" onclick="toggleHint('hint171a')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint171a">
+                    Räkna först ut 10%, sedan ta 2 gånger det!
+                </div>
+                <input type="text" id="ans171a" placeholder="Ditt svar">
+
+                <p>b) 30 % av 20 kg</p>
+                <button class="hint-button" onclick="toggleHint('hint171b')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint171b">
+                    10% av 20 = 2. Vad är 3 × 2?
+                </div>
+                <input type="text" id="ans171b" placeholder="Ditt svar">
+
+                <p>c) 75 % av 80 cm</p>
+                <button class="hint-button" onclick="toggleHint('hint171c')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint171c">
+                    75% = 3/4. Dela på 4, sedan ta 3 gånger det!
+                </div>
+                <input type="text" id="ans171c" placeholder="Ditt svar">
+
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check171" onchange="checkAnswer('check171', 'celebration171', 10)">
+                    <label for="check171">Jag är klar med uppgift 171</label>
+                </div>
+
+                <div class="celebration" id="celebration171">
+                    &#128640; Fantastiskt! +10 poäng!
+                </div>
+            </div>
+
+            <!-- Problem 173 -->
+            <div class="problem">
+                <div class="problem-number">Uppgift 173</div>
+                <p><strong>Hur stor är delen?</strong></p>
+
+                <p>a) 5 % av 60 kr</p>
+                <button class="hint-button" onclick="toggleHint('hint173a')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint173a">
+                    Räkna först 1%, sedan ta 5 gånger det!
+                </div>
+                <input type="text" id="ans173a" placeholder="Ditt svar">
+
+                <p>b) 6 % av 400 kg</p>
+                <button class="hint-button" onclick="toggleHint('hint173b')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint173b">
+                    1% av 400 = 4. Vad är 6 × 4?
+                </div>
+                <input type="text" id="ans173b" placeholder="Ditt svar">
+
+                <p>c) 9 % av 200 ml</p>
+                <button class="hint-button" onclick="toggleHint('hint173c')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint173c">
+                    1% av 200 = 2. Vad är 9 × 2?
+                </div>
+                <input type="text" id="ans173c" placeholder="Ditt svar">
+
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check173" onchange="checkAnswer('check173', 'celebration173', 10)">
+                    <label for="check173">Jag är klar med uppgift 173</label>
+                </div>
+
+                <div class="celebration" id="celebration173">
+                    &#9889; Grym jobbat! +10 poäng!
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-button" onclick="showPage(2)">&#8592; Föregående</button>
+                <button class="nav-button" onclick="showPage(4)">Nästa &#8594;</button>
+            </div>
+        </div>
+
+        <!-- ==================== DEL 4: ÖVNINGAR 4-6 ==================== -->
+        <div class="page-content" id="page4">
+
+            <div class="page-motivation">
+                &#128092; Nu räknar du ut rabatter på sneakers! Perfekt för att veta exakt vad du sparar när du hittar ett bra erbjudande.
+            </div>
+
+            <h2>&#9999;&#65039; Del 4: Övningar (4-6)</h2>
+
+            <!-- Problem 174 -->
+            <div class="problem">
+                <div class="problem-number">Uppgift 174</div>
+                <p><strong>Sneakers på rea!</strong></p>
+                <p>Ett par sneakers kostade 800 kr.</p>
+                <p>Affären sänkte priset med 1/4.</p>
+
+                <p>a) Med hur många procent sänktes priset?</p>
+                <button class="hint-button" onclick="toggleHint('hint174a')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint174a">
+                    1/4 = 25%. Kolla i rutan med sambanden!
+                </div>
+                <input type="text" id="ans174a" placeholder="Ditt svar">
+
+                <p>b) Med hur många kronor sänktes priset?</p>
+                <button class="hint-button" onclick="toggleHint('hint174b')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint174b">
+                    25% av 800 kr = 800 ÷ 4
+                </div>
+                <input type="text" id="ans174b" placeholder="Ditt svar">
+
+                <p>c) Vad kostade sneakersen efter prissänkningen?</p>
+                <button class="hint-button" onclick="toggleHint('hint174c')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint174c">
+                    800 kr minus det du räknade ut i b)
+                </div>
+                <input type="text" id="ans174c" placeholder="Ditt svar">
+
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check174" onchange="checkAnswer('check174', 'celebration174', 15)">
+                    <label for="check174">Jag är klar med uppgift 174</label>
+                </div>
+
+                <div class="celebration" id="celebration174">
+                    &#127882; Magiskt! +15 poäng!
+                </div>
+            </div>
+
+            <!-- Problem 176 -->
+            <div class="problem">
+                <div class="problem-number">Uppgift 176</div>
+                <p><strong>Hur stor är delen?</strong></p>
+
+                <p>a) 30 % av 40 kg</p>
+                <button class="hint-button" onclick="toggleHint('hint176a')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint176a">
+                    10% av 40 = 4. Vad är 3 × 4?
+                </div>
+                <input type="text" id="ans176a" placeholder="Ditt svar">
+
+                <p>b) 40 % av 30 kg</p>
+                <button class="hint-button" onclick="toggleHint('hint176b')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint176b">
+                    10% av 30 = 3. Vad är 4 × 3?
+                </div>
+                <input type="text" id="ans176b" placeholder="Ditt svar">
+
+                <p>c) 4 % av 300 kg</p>
+                <button class="hint-button" onclick="toggleHint('hint176c')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint176c">
+                    1% av 300 = 3. Vad är 4 × 3?
+                </div>
+                <input type="text" id="ans176c" placeholder="Ditt svar">
+
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check176" onchange="checkAnswer('check176', 'celebration176', 10)">
+                    <label for="check176">Jag är klar med uppgift 176</label>
+                </div>
+
+                <div class="celebration" id="celebration176">
+                    &#127942; Champion! +10 poäng!
+                </div>
+            </div>
+
+            <!-- TANKEFRÅGA 175 -->
+            <div class="problem">
+                <div class="problem-number">&#10052;&#65039; Tankefråga 175</div>
+                <p><strong>På vilka olika sätt kan du räkna ut hur mycket 20 % av 50 kg är?</strong></p>
+
+                <button class="hint-button" onclick="toggleHint('hint175')">&#128161; Visa ledtråd</button>
+                <div class="hint-content" id="hint175">
+                    Det finns minst 3 olika sätt! Tänk på 10%, 1%, eller bråk...
+                </div>
+
+                <textarea placeholder="Skriv dina olika sätt här..."></textarea>
+
+                <div class="important-box">
+                    Sätt 1: Via 10% &#8594; 10% av 50 = 5, så 20% = 2 × 5 = 10 kg<br>
+                    Sätt 2: Via 1% &#8594; 1% av 50 = 0,5, så 20% = 20 × 0,5 = 10 kg<br>
+                    Sätt 3: Via bråk &#8594; 20% = 1/5, så 50 ÷ 5 = 10 kg
+                </div>
+
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check175" onchange="checkAnswer('check175', 'celebration175', 10)">
+                    <label for="check175">Jag har tänkt på olika sätt</label>
+                </div>
+
+                <div class="celebration" id="celebration175">
+                    &#129504; Snyggt tänkt! +10 poäng!
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-button" onclick="showPage(3)">&#8592; Föregående</button>
+                <button class="nav-button" onclick="showPage(5)">Nästa &#8594;</button>
+            </div>
+        </div>
+
+        <!-- ==================== DEL 5: UTMANING & SAMMANFATTNING ==================== -->
+        <div class="page-content" id="page5">
+
+            <div class="page-motivation">
+                &#127942; Sista utmaningen! Här räknar du baklänges - om du klarar detta kan du ta reda på originalpriset innan rabatten!
+            </div>
+
+            <h2>&#9889; Del 5: Utmaning!</h2>
+
+            <!-- Problem 177 -->
+            <div class="problem">
+                <div class="problem-number">Uppgift 177 - Utmaning!</div>
+                <p><strong>25 % av ett tal är lika med 40.</strong></p>
+                <p><strong>Vilket är talet?</strong></p>
+
+                <button class="hint-button" onclick="toggleHint('hint177a')">&#128161; Ledtråd 1</button>
+                <div class="hint-content" id="hint177a">
+                    Om 25% (en fjärdedel) är 40, hur mycket är då hela (4/4)?
+                </div>
+
+                <button class="hint-button" onclick="toggleHint('hint177b')">&#128161; Ledtråd 2</button>
+                <div class="hint-content" id="hint177b">
+                    40 × 4 = ?
+                </div>
+                <input type="text" id="ans177" placeholder="Ditt svar">
+
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check177" onchange="checkAnswer('check177', 'celebration177', 20)">
+                    <label for="check177">Jag är klar med uppgift 177</label>
+                </div>
+
+                <div class="celebration" id="celebration177">
+                    &#127942;&#65039; MASTERKLASS! +20 poäng!
+                </div>
+            </div>
+
+            <!-- SAMMANFATTNING -->
+            <div class="section" style="background: linear-gradient(135deg, #48bb78, #38a169); color: white; margin-top: 30px;">
+                <h2 style="color: white; background: none; border: none;">&#127881; Sammanfattning</h2>
+                <h3 style="color: white;">Du har lärt dig:</h3>
+                <ul>
+                    <li>Viktiga samband mellan procent och bråk</li>
+                    <li>Hur man räknar via 10% eller 1%</li>
+                    <li>Att dela med 2, 4, 5, 10 eller 100</li>
+                    <li>Hur man löser procentproblem steg för steg</li>
+                </ul>
+
+                <div class="whitespace"></div>
+
+                <div style="text-align: center; font-size: 24pt; font-weight: bold;">
+                    &#127942; DU ÄR EN PROCENTMÄSTARE! &#127942;
+                </div>
+
+                <div class="checkbox-container" style="justify-content: center; margin-top: 20px;">
+                    <input type="checkbox" class="checkbox" id="checkFinal" onchange="checkAnswer('checkFinal', 'celebrationFinal', 25)">
+                    <label for="checkFinal" style="color: white;">Jag är färdig med hela lektionen!</label>
+                </div>
+
+                <div class="celebration" id="celebrationFinal" style="background: white; color: #48bb78;">
+                    &#127775;&#127775;&#127775; GRATTIS! MAXPOÄNG! &#127775;&#127775;&#127775;
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-button" onclick="showPage(4)">&#8592; Föregående</button>
+                <button class="nav-button" disabled>Klar! &#127881;</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let totalPoints = 0;
+        let completedTasks = 0;
+        const totalTasks = 16;
+
+        function showPage(pageNum) {
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            document.querySelectorAll('.page-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            document.getElementById('page' + pageNum).classList.add('active');
+            document.querySelectorAll('.page-tab')[pageNum - 1].classList.add('active');
+
+            window.scrollTo(0, 0);
+        }
+
+        function toggleHint(hintId) {
+            const hint = document.getElementById(hintId);
+            hint.classList.toggle('active');
+        }
+
+        function checkAnswer(checkboxId, celebrationId, points) {
+            const checkbox = document.getElementById(checkboxId);
+            const celebration = document.getElementById(celebrationId);
+
+            if (checkbox.checked) {
+                celebration.style.display = 'block';
+                totalPoints += points;
+                document.getElementById('points').textContent = '⭐ ' + totalPoints + ' poäng';
+                setTimeout(() => {
+                    celebration.style.display = 'none';
+                }, 3000);
+                updateProgress();
+            }
+        }
+
+        function updateProgress() {
+            completedTasks = 0;
+            const checkboxes = document.querySelectorAll('.checkbox:checked');
+            completedTasks = checkboxes.length;
+
+            const percentage = Math.round((completedTasks / totalTasks) * 100);
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = percentage + '%';
+        }
+    </script>
+</body>
+</html>
