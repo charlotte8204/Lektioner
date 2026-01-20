@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uppgift 30: Shoppingproblem - Esthers Matte</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Verdana, Geneva, sans-serif; font-size: 18px; line-height: 1.7; background: linear-gradient(135deg, #fdf6f9 0%, #f0f4f8 100%); min-height: 100vh; color: #4a4a4a; }
+        :root { --pastel-pink: #f8e1e8; --pastel-blue: #e1ecf8; --pastel-green: #e1f8e8; --pastel-yellow: #f8f4e1; --text-dark: #4a4a4a; --text-medium: #6a6a6a; --accent-pink: #d4a5b5; --success-green: #98d4a5; --white: #ffffff; }
+        .page-container { display: flex; min-height: 100vh; }
+        .sidebar { width: 220px; background: var(--white); padding: 25px 20px; border-right: 1px solid #eee; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-title { font-size: 14px; color: var(--text-medium); margin-bottom: 15px; text-transform: uppercase; }
+        .nav-list { list-style: none; }
+        .nav-item { margin-bottom: 8px; }
+        .nav-link { display: block; padding: 10px 12px; text-decoration: none; color: var(--text-medium); border-radius: 8px; font-size: 14px; }
+        .nav-link:hover { background: var(--pastel-blue); }
+        .nav-link.current { background: var(--pastel-pink); color: var(--text-dark); font-weight: 600; }
+        .nav-link.completed::before { content: "✓ "; color: var(--success-green); }
+        .nav-link.skipped {
+            color: #ff9800;
+        }
+        .nav-link.skipped::before {
+            content: "○ ";
+        }
+        .you-are-here { font-size: 11px; color: var(--accent-pink); display: block; margin-top: 2px; }
+        .main-content { flex: 1; margin-left: 220px; padding: 30px 50px; max-width: 900px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .back-link { color: var(--accent-pink); text-decoration: none; font-size: 15px; }
+        .progress-mini { font-size: 14px; color: var(--text-medium); background: var(--pastel-blue); padding: 8px 15px; border-radius: 20px; }
+        .content-card { background: var(--white); border-radius: 20px; padding: 35px 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .page-title { font-size: 24px; color: var(--text-dark); margin-bottom: 8px; }
+        .page-subtitle { font-size: 15px; color: var(--text-medium); margin-bottom: 25px; }
+        .challenge-badge { display: inline-block; background: linear-gradient(135deg, #e8c8f0 0%, #d8b8e0 100%); color: #6a4a7a; padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-bottom: 20px; }
+        .problem-box { background: var(--pastel-yellow); border-radius: 15px; padding: 25px; margin-bottom: 25px; border-left: 5px solid #e8d888; }
+        .problem-title { font-size: 14px; color: var(--text-medium); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .problem-text { font-size: 18px; line-height: 1.9; color: var(--text-dark); }
+        .highlight-info { background: #f0e8c8; padding: 3px 10px; border-radius: 6px; font-weight: 600; white-space: nowrap; }
+        .shop-visual { background: var(--pastel-blue); border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .shop-title { font-size: 16px; color: var(--text-medium); margin-bottom: 15px; text-align: center; }
+        .shop-items { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .shop-item { background: white; padding: 20px; border-radius: 12px; text-align: center; min-width: 150px; }
+        .shop-icon { font-size: 35px; margin-bottom: 8px; }
+        .shop-name { font-size: 14px; color: var(--text-medium); margin-bottom: 5px; }
+        .shop-price { font-size: 18px; font-weight: 600; color: var(--text-dark); }
+        .shop-discount { font-size: 12px; color: var(--accent-pink); background: var(--pastel-pink); padding: 3px 8px; border-radius: 10px; margin-top: 5px; display: inline-block; }
+        .budget-box { background: var(--pastel-green); border-radius: 15px; padding: 20px; margin: 20px 0; text-align: center; }
+        .budget-icon { font-size: 30px; margin-bottom: 8px; }
+        .budget-text { font-size: 18px; font-weight: 600; color: #4a7a5a; }
+        .task-section { background: var(--pastel-pink); border-radius: 15px; padding: 25px; margin-top: 25px; }
+        .task-title { font-size: 18px; font-weight: 600; color: var(--text-dark); margin-bottom: 15px; }
+        .task-question { font-size: 17px; color: var(--text-dark); margin-bottom: 20px; line-height: 1.7; }
+        .answer-options { display: flex; flex-direction: column; align-items: center; gap: 12px; margin: 20px 0; }
+        .option-btn { width: 320px; padding: 15px 20px; font-size: 16px; font-weight: 600; background: white; border: 3px solid #ddd; border-radius: 15px; cursor: pointer; font-family: Verdana; text-align: left; }
+        .option-btn:hover { border-color: var(--accent-pink); transform: scale(1.02); }
+        .option-btn.correct { border-color: var(--success-green); background: var(--pastel-green); }
+        .option-btn.incorrect { border-color: #e8a5a5; background: #f8e8e8; }
+        .feedback { margin-top: 20px; padding: 15px 20px; border-radius: 10px; display: none; text-align: center; }
+        .feedback.show { display: block; }
+        .feedback.correct { background: var(--pastel-green); color: #4a7a5a; }
+        .feedback.incorrect { background: #f8e8e8; color: #7a4a4a; }
+        .hint-btn { background: #b8a5d4; color: white; border: none; padding: 12px 24px; border-radius: 20px; font-family: Verdana; font-size: 14px; cursor: pointer; margin-top: 20px; display: flex; align-items: center; gap: 8px; margin-left: auto; margin-right: auto; }
+        .hint-btn:hover { background: #a090c4; }
+        .hint-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .hint-progress { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+        .hint-dot { width: 10px; height: 10px; border-radius: 50%; background: #ddd; }
+        .hint-dot.active { background: #b8a5d4; }
+        .hint-section { background: linear-gradient(135deg, #efe1f8 0%, #e8d4f4 100%); border-radius: 15px; padding: 20px; margin-top: 15px; border-left: 4px solid #b8a5d4; display: none; }
+        .hint-section.show { display: block; }
+        .hint-label { font-size: 13px; color: #8a7a9a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .hint-text { font-size: 16px; color: var(--text-dark); line-height: 1.7; }
+        .hint-math { background: white; padding: 10px 15px; border-radius: 8px; margin-top: 10px; font-family: monospace; font-size: 15px; text-align: left; line-height: 1.8; }
+        .success-section { display: none; text-align: center; margin-top: 25px; padding: 25px; background: var(--pastel-green); border-radius: 15px; }
+        .success-section.show { display: block; }
+        .success-message { font-size: 20px; color: #4a7a5a; margin-bottom: 20px; line-height: 1.6; }
+        .celebration { font-size: 35px; margin-bottom: 15px; }
+        .next-btn { background: var(--success-green); color: white; border: none; padding: 15px 35px; border-radius: 30px; font-family: Verdana; font-size: 18px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .next-btn:hover { background: #88c498; }
+        .pause-button { position: fixed; bottom: 30px; right: 30px; background: var(--pastel-green); border: none; padding: 12px 20px; border-radius: 25px; font-family: Verdana; font-size: 14px; color: var(--text-dark); cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .pause-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .pause-modal.active { display: flex; }
+        .pause-content { background: white; padding: 40px; border-radius: 20px; text-align: center; max-width: 400px; }
+        .pause-content h2 { margin-bottom: 15px; }
+        .pause-content p { margin-bottom: 25px; color: var(--text-medium); }
+        .pause-close { background: var(--accent-pink); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-family: Verdana; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <nav class="sidebar">
+            <div class="sidebar-title">Innehåll</div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="index.html" class="nav-link">← Tillbaka</a></li>
+                <li class="nav-item"><a href="uppgift-28-rabatt-procent.html" class="nav-link completed">28. Rabatt i procent</a></li>
+                <li class="nav-item"><a href="uppgift-29-nytt-pris.html" class="nav-link completed">29. Nytt pris</a></li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link current">30. Shoppingproblem<span class="you-are-here">← Du är här</span></a>
+                </li>
+                <li class="nav-item"><a href="index.html" class="nav-link">Fler uppgifter...</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <div class="top-bar">
+                <a href="index.html" class="back-link">← Alla uppgifter</a>
+                <span class="progress-mini">Uppgift 30 av 55</span>
+            </div>
+
+            <div class="content-card">
+                <h1 class="page-title">Shoppingproblem</h1>
+                <p class="page-subtitle">Flera steg - tänk noga!</p>
+
+                <div class="challenge-badge">⭐⭐ EXTRA UTMANING</div>
+
+                <div class="problem-box">
+                    <p class="problem-title">Problemet:</p>
+                    <p class="problem-text">
+                        Esther vill köpa smink till sin kompis Majas födelsedag. Hon hittar tre produkter:
+                        <br><br>
+                        <strong>Läppglans:</strong> <span class="highlight-info">80 kr</span> med <span class="highlight-info">25% rabatt</span>
+                        <br>
+                        <strong>Mascara:</strong> <span class="highlight-info">120 kr</span> med <span class="highlight-info">50% rabatt</span>
+                        <br>
+                        <strong>Nagellack:</strong> <span class="highlight-info">40 kr</span> (ingen rabatt)
+                        <br><br>
+                        Esther har <span class="highlight-info">150 kr</span>. Räcker pengarna till ALLA tre produkter?
+                    </p>
+                </div>
+
+                <div class="shop-visual">
+                    <p class="shop-title">Produkterna:</p>
+                    <div class="shop-items">
+                        <div class="shop-item">
+                            <div class="shop-icon">💋</div>
+                            <div class="shop-name">Läppglans</div>
+                            <div class="shop-price">80 kr</div>
+                            <div class="shop-discount">25% rabatt</div>
+                        </div>
+                        <div class="shop-item">
+                            <div class="shop-icon">👁️</div>
+                            <div class="shop-name">Mascara</div>
+                            <div class="shop-price">120 kr</div>
+                            <div class="shop-discount">50% rabatt</div>
+                        </div>
+                        <div class="shop-item">
+                            <div class="shop-icon">💅</div>
+                            <div class="shop-name">Nagellack</div>
+                            <div class="shop-price">40 kr</div>
+                            <div class="shop-discount">Ingen rabatt</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="budget-box">
+                    <div class="budget-icon">💰</div>
+                    <div class="budget-text">Esthers budget: 150 kr</div>
+                </div>
+
+                <div class="task-section">
+                    <h2 class="task-title">✏️ Räcker Esthers pengar?</h2>
+                    <p class="task-question">
+                        Räkna ut priset på varje produkt efter rabatt. Lägg ihop. Jämför med 150 kr.
+                    </p>
+
+                    <div class="answer-options">
+                        <button class="option-btn" onclick="checkOption(this, true)">Ja, pengarna räcker (med pengar över)</button>
+                        <button class="option-btn" onclick="checkOption(this, false)">Ja, men precis - 0 kr kvar</button>
+                        <button class="option-btn" onclick="checkOption(this, false)">Nej, det fattas 10 kr</button>
+                        <button class="option-btn" onclick="checkOption(this, false)">Nej, det fattas 30 kr</button>
+                    </div>
+
+                    <div class="feedback" id="feedback"></div>
+
+                    <button class="hint-btn" id="hint-btn" onclick="showNextHint()">
+                        💡 Jag behöver en ledtråd
+                    </button>
+
+                    <div class="hint-progress">
+                        <div class="hint-dot" id="dot-1"></div>
+                        <div class="hint-dot" id="dot-2"></div>
+                        <div class="hint-dot" id="dot-3"></div>
+                        <div class="hint-dot" id="dot-4"></div>
+                        <div class="hint-dot" id="dot-5"></div>
+                    </div>
+
+                    <div class="hint-section" id="hint-1">
+                        <p class="hint-label">Ledtråd 1: Vad vet vi?</p>
+                        <p class="hint-text">
+                            Skriv upp informationen:
+                        </p>
+                        <div class="hint-math">
+                            Läppglans: 80 kr, 25% rabatt<br>
+                            Mascara: 120 kr, 50% rabatt<br>
+                            Nagellack: 40 kr, 0% rabatt<br>
+                            Budget: 150 kr
+                        </div>
+                    </div>
+
+                    <div class="hint-section" id="hint-2">
+                        <p class="hint-label">Ledtråd 2: Läppglans efter rabatt</p>
+                        <p class="hint-text">
+                            25% rabatt = ta bort 1/4 av priset
+                        </p>
+                        <div class="hint-math">
+                            25% av 80 = 80 ÷ 4 = 20 kr rabatt<br>
+                            Nytt pris: 80 - 20 = 60 kr
+                        </div>
+                    </div>
+
+                    <div class="hint-section" id="hint-3">
+                        <p class="hint-label">Ledtråd 3: Mascara efter rabatt</p>
+                        <p class="hint-text">
+                            50% rabatt = halva priset
+                        </p>
+                        <div class="hint-math">
+                            50% av 120 = 120 ÷ 2 = 60 kr rabatt<br>
+                            Nytt pris: 120 - 60 = 60 kr
+                        </div>
+                    </div>
+
+                    <div class="hint-section" id="hint-4">
+                        <p class="hint-label">Ledtråd 4: Totalt pris</p>
+                        <p class="hint-text">
+                            Lägg ihop alla produkter:
+                        </p>
+                        <div class="hint-math">
+                            Läppglans: 60 kr<br>
+                            Mascara: 60 kr<br>
+                            Nagellack: 40 kr<br>
+                            ───────────<br>
+                            Totalt: 60 + 60 + 40 = 160 kr
+                        </div>
+                    </div>
+
+                    <div class="hint-section" id="hint-5">
+                        <p class="hint-label">Ledtråd 5: Jämför med budget</p>
+                        <p class="hint-text">
+                            Totalt: 160 kr. Budget: 150 kr. Räcker pengarna? Om inte, hur mycket fattas?
+                        </p>
+                        <div class="hint-math">
+                            Totalt pris: 160 kr<br>
+                            Esthers pengar: 150 kr<br>
+                            <br>
+                            Jämför: Är 160 mer eller mindre än 150?<br>
+                            Om det är mer - hur mycket mer?
+                        </div>
+                    </div>
+                </div>
+
+                <div class="success-section" id="success">
+                    <div class="celebration">🎉🎁💄</div>
+                    <p class="success-message">
+                        Fantastiskt! Du löste ett svårt problem med flera steg!
+                        <br><br>
+                        Läppglans: 80 - 20 = <strong>60 kr</strong>
+                        <br>Mascara: 120 - 60 = <strong>60 kr</strong>
+                        <br>Nagellack: <strong>40 kr</strong>
+                        <br>Totalt: 60 + 60 + 40 = <strong>160 kr</strong>
+                        <br><br>
+                        160 - 150 = 10 kr. Det fattas 10 kr!
+                        <br><br>
+                        🌟 Grattis, du har klarat 30 uppgifter! 🌟
+                    </p>
+                    <a href="index.html" class="next-btn">Tillbaka till start →</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <button class="pause-button" onclick="showPause()">🧘 Paus</button>
+
+    <div class="pause-modal" id="pause-modal">
+        <div class="pause-content">
+            <h2>Paus! 🌟</h2>
+            <p>30 uppgifter klara! Du är en riktig mattestjärna!</p>
+            <button class="pause-close" onclick="hidePause()">Jag är redo igen →</button>
+        </div>
+    </div>
+
+    <script>
+        let answered = false;
+        let currentHint = 0;
+        const totalHints = 5;
+
+        function showNextHint() {
+            if (currentHint < totalHints) {
+                currentHint++;
+                document.getElementById('hint-' + currentHint).classList.add('show');
+                document.getElementById('dot-' + currentHint).classList.add('active');
+                if (currentHint >= totalHints) {
+                    document.getElementById('hint-btn').disabled = true;
+                }
+            }
+        }
+
+        function checkOption(element, isCorrect) {
+            if (answered) return;
+            const feedback = document.getElementById('feedback');
+
+            // Actually, let me reconsider: 60+60+40=160, and 160>150, so "Nej, det fattas 10 kr" is correct
+            // But I set "Ja, pengarna räcker" as correct - that's a trick to make them think carefully
+            // Let me change the logic to make "Nej, det fattas 10 kr" the correct answer
+
+            const clickedText = element.textContent;
+
+            if (clickedText.includes('fattas 10')) {
+                // This is actually correct!
+                answered = true;
+                element.classList.add('correct');
+                feedback.textContent = 'Helt rätt! 60+60+40=160 kr, men Esther har bara 150 kr. Det fattas 10 kr! ⭐';
+                feedback.className = 'feedback show correct';
+                setTimeout(() => {
+                    document.getElementById('success').classList.add('show');
+                    markCompleted(30);
+                }, 1000);
+            } else if (clickedText.includes('Ja, pengarna räcker')) {
+                element.classList.add('incorrect');
+                feedback.textContent = 'Räkna noga! 60+60+40=160 kr. Har Esther 160 kr?';
+                feedback.className = 'feedback show incorrect';
+                setTimeout(() => element.classList.remove('incorrect'), 1500);
+            } else if (clickedText.includes('precis')) {
+                element.classList.add('incorrect');
+                feedback.textContent = 'Nästan! Men 60+60+40=160, inte 150. Räkna igen!';
+                feedback.className = 'feedback show incorrect';
+                setTimeout(() => element.classList.remove('incorrect'), 1500);
+            } else if (clickedText.includes('fattas 30')) {
+                element.classList.add('incorrect');
+                feedback.textContent = '160-150=10, inte 30. Prova igen!';
+                feedback.className = 'feedback show incorrect';
+                setTimeout(() => element.classList.remove('incorrect'), 1500);
+            }
+        }
+
+        function markCompleted(taskNumber) {
+            let completed = [];
+            try {
+                const data = localStorage.getItem('esther-completed-tasks');
+                completed = data ? JSON.parse(data) : [];
+            } catch(e) { completed = []; }
+
+            if (!completed.includes(taskNumber)) {
+                completed.push(taskNumber);
+                localStorage.setItem('esther-completed-tasks', JSON.stringify(completed));
+            }
+
+            let skipped = [];
+            try {
+                const data = localStorage.getItem('esther-skipped-tasks');
+                skipped = data ? JSON.parse(data) : [];
+            } catch(e) { skipped = []; }
+
+            const idx = skipped.indexOf(taskNumber);
+            if (idx > -1) {
+                skipped.splice(idx, 1);
+                localStorage.setItem('esther-skipped-tasks', JSON.stringify(skipped));
+            }
+        }
+
+        window.addEventListener('beforeunload', function() {
+            const success = document.getElementById('success');
+            if (success && !success.classList.contains('show')) {
+                let completed = [];
+                try {
+                    const data = localStorage.getItem('esther-completed-tasks');
+                    completed = data ? JSON.parse(data) : [];
+                } catch(e) { completed = []; }
+
+                if (!completed.includes(30)) {
+                    let skipped = [];
+                    try {
+                        const data = localStorage.getItem('esther-skipped-tasks');
+                        skipped = data ? JSON.parse(data) : [];
+                    } catch(e) { skipped = []; }
+
+                    if (!skipped.includes(30)) {
+                        skipped.push(30);
+                        localStorage.setItem('esther-skipped-tasks', JSON.stringify(skipped));
+                    }
+                }
+            }
+        });
+
+        function showPause() { document.getElementById('pause-modal').classList.add('active'); }
+        function hidePause() { document.getElementById('pause-modal').classList.remove('active'); }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') hidePause(); });
+    </script>
+</body>
+</html>

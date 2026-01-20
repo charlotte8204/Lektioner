@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bråk och Procent - Esthers Mattesidor</title>
+    <style>
+        /* === GRUNDLÄGGANDE STYLING === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 18px;
+            line-height: 1.7;
+            background: linear-gradient(135deg, #fdf6f9 0%, #f0f4f8 100%);
+            min-height: 100vh;
+            color: #4a4a4a;
+        }
+
+        /* === PASTELLFÄRGER FÖR ESTHER === */
+        :root {
+            --pastel-pink: #f8e1e8;
+            --pastel-blue: #e1ecf8;
+            --pastel-green: #e1f8e8;
+            --pastel-yellow: #f8f4e1;
+            --pastel-purple: #efe1f8;
+            --text-dark: #4a4a4a;
+            --text-medium: #6a6a6a;
+            --accent-pink: #d4a5b5;
+            --accent-blue: #a5c4d4;
+            --success-green: #98d4a5;
+            --white: #ffffff;
+        }
+
+        /* === LAYOUT === */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 40px;
+        }
+
+        /* === HEADER MED VÄLKOMST === */
+        .welcome-header {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 35px 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .welcome-header h1 {
+            font-size: 28px;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .welcome-name {
+            color: var(--accent-pink);
+        }
+
+        .welcome-message {
+            font-size: 18px;
+            color: var(--text-medium);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* === PROGRESS SEKTION === */
+        .progress-section {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .progress-title {
+            font-size: 16px;
+            color: var(--text-medium);
+        }
+
+        .progress-count {
+            font-size: 16px;
+            color: var(--accent-pink);
+            font-weight: 600;
+        }
+
+        .progress-bar-container {
+            background: var(--pastel-pink);
+            border-radius: 15px;
+            height: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--accent-pink), #e8b5c5);
+            height: 100%;
+            border-radius: 15px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            font-size: 14px;
+            color: var(--text-medium);
+        }
+
+        /* === MÅL-SEKTION === */
+        .goal-section {
+            background: var(--pastel-yellow);
+            border-radius: 15px;
+            padding: 20px 25px;
+            margin-bottom: 30px;
+            border-left: 4px solid #e8d4a5;
+        }
+
+        .goal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .goal-text {
+            font-size: 16px;
+            color: var(--text-medium);
+        }
+
+        /* === UPPGIFTSLISTA === */
+        .tasks-section {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .tasks-title {
+            font-size: 20px;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--pastel-pink);
+        }
+
+        .task-group {
+            margin-bottom: 25px;
+        }
+
+        .task-group-title {
+            font-size: 16px;
+            color: var(--accent-blue);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            margin-bottom: 10px;
+        }
+
+        .task-link {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background: var(--pastel-blue);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .task-link:hover {
+            background: #d4e4f4;
+            transform: translateX(5px);
+        }
+
+        .task-link.completed {
+            background: var(--pastel-green);
+            border-color: var(--success-green);
+        }
+
+        .task-link.current {
+            background: var(--pastel-pink);
+            border-color: var(--accent-pink);
+        }
+
+        .task-link.locked {
+            background: #f0f0f0;
+            color: #aaa;
+            cursor: not-allowed;
+        }
+
+        .task-link.skipped {
+            background: #fff3e0;
+            border-color: #ffb74d;
+        }
+
+        .task-link.skipped .task-number {
+            background: #ffb74d;
+            color: white;
+        }
+
+        .task-link.skipped .task-number::after {
+            content: "○";
+        }
+
+        .task-link.skipped .task-number span {
+            display: none;
+        }
+
+        .task-number {
+            width: 35px;
+            height: 35px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 15px;
+            font-size: 14px;
+        }
+
+        .task-link.completed .task-number {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .task-link.completed .task-number::after {
+            content: "✓";
+        }
+
+        .task-link.completed .task-number span {
+            display: none;
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-name {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .task-time {
+            font-size: 13px;
+            color: var(--text-medium);
+            margin-top: 3px;
+        }
+
+        .task-status {
+            font-size: 13px;
+            padding: 4px 10px;
+            border-radius: 8px;
+            margin-left: 10px;
+        }
+
+        .task-link.completed .task-status {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .task-link.current .task-status {
+            background: var(--accent-pink);
+            color: white;
+        }
+
+        /* === TIPS-RUTA === */
+        .tips-section {
+            background: var(--pastel-purple);
+            border-radius: 15px;
+            padding: 20px 25px;
+            margin-top: 30px;
+        }
+
+        .tips-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .tips-list {
+            list-style: none;
+            font-size: 15px;
+            color: var(--text-medium);
+        }
+
+        .tips-list li {
+            padding: 5px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .tips-list li::before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+        }
+
+        /* === PAUS-KNAPP === */
+        .pause-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--pastel-green);
+            border: none;
+            padding: 15px 25px;
+            border-radius: 30px;
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 15px;
+            color: var(--text-dark);
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+
+        .pause-button:hover {
+            transform: scale(1.05);
+            background: #88c498;
+        }
+
+        /* === PAUS-MODAL === */
+        .pause-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pause-modal.active {
+            display: flex;
+        }
+
+        .pause-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .pause-content h2 {
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .pause-content p {
+            color: var(--text-medium);
+            margin-bottom: 25px;
+        }
+
+        .pause-close {
+            background: var(--accent-pink);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-family: Verdana;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* === FOOTER === */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-medium);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Kommentar för förälder/pedagog:
+         Detta är startsidan för Esthers mattemodul om bråk och procent.
+         Progress sparas automatiskt i webbläsaren (localStorage).
+         Uppskattad tid: ca 3-4 sessioner à 20 minuter.
+    -->
+
+    <div class="container">
+        <!-- VÄLKOMST -->
+        <header class="welcome-header">
+            <h1>Hej <span class="welcome-name">Esther</span>! 👋</h1>
+            <p class="welcome-message">
+                Här ska vi utforska bråk och procent tillsammans.
+                Ta det lugnt, ett steg i taget. Du klarar det här!
+            </p>
+        </header>
+
+        <!-- PROGRESS -->
+        <section class="progress-section">
+            <div class="progress-header">
+                <span class="progress-title">Din framgång</span>
+                <span class="progress-count" id="progress-text">0 av 55 klara</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="progress-info">
+                <span>Du har precis börjat!</span>
+                <span id="time-estimate">Ca 3 sessioner kvar</span>
+            </div>
+        </section>
+
+        <!-- MÅL -->
+        <section class="goal-section">
+            <div class="goal-title">🎯 Varför lär vi oss detta?</div>
+            <p class="goal-text">
+                Bråk och procent används överallt! När du delar en pizza,
+                räknar ut rabatter på smink, eller kollar hur snabb en skidåkare är.
+                När du kan detta blir mycket enklare att förstå!
+            </p>
+        </section>
+
+        <!-- UPPGIFTER -->
+        <section class="tasks-section">
+            <h2 class="tasks-title">📚 Alla uppgifter</h2>
+
+            <!-- GRUPP 1: Grunderna -->
+            <div class="task-group">
+                <h3 class="task-group-title">Del 1: Vad är bråk?</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <a href="uppgift-01-vad-ar-brak.html" class="task-link current" id="task-1">
+                            <div class="task-number"><span>1</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Vad är ett bråk?</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                            <span class="task-status">Börja här →</span>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-02-delar-av-en-hel.html" class="task-link" id="task-2">
+                            <div class="task-number"><span>2</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Delar av en hel</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-03-taljare-namnare.html" class="task-link" id="task-3">
+                            <div class="task-number"><span>3</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Täljare och nämnare</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-04-halva-tredjedel.html" class="task-link" id="task-4">
+                            <div class="task-number"><span>4</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Halva, tredjedel, fjärdedel</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-05-visa-brak-med-bild.html" class="task-link" id="task-5">
+                            <div class="task-number"><span>5</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Visa bråk med bild</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- GRUPP 2: Räkna med bråk -->
+            <div class="task-group">
+                <h3 class="task-group-title">Del 2: Räkna med bråk</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <a href="uppgift-06-lagga-ihop-brak.html" class="task-link" id="task-6">
+                            <div class="task-number"><span>6</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Lägga ihop bråk</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-07-dra-bort-brak.html" class="task-link" id="task-7">
+                            <div class="task-number"><span>7</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Dra bort bråk</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-08-blandad-form.html" class="task-link" id="task-8">
+                            <div class="task-number"><span>8</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Blandad form</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-09-forlanga-brak.html" class="task-link" id="task-9">
+                            <div class="task-number"><span>9</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Förlänga bråk</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-10-forkorta-brak.html" class="task-link" id="task-10">
+                            <div class="task-number"><span>10</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Förkorta bråk</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- GRUPP 3: Procent -->
+            <div class="task-group">
+                <h3 class="task-group-title">Del 3: Vad är procent?</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <a href="uppgift-11-vad-ar-procent.html" class="task-link" id="task-11">
+                            <div class="task-number"><span>11</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Vad är procent?</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-12-procent-brak.html" class="task-link" id="task-12">
+                            <div class="task-number"><span>12</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Procent och bråk</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-13-rakna-procent.html" class="task-link" id="task-13">
+                            <div class="task-number"><span>13</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Räkna procent</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-14-procent-av-tal.html" class="task-link" id="task-14">
+                            <div class="task-number"><span>14</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Procent av ett tal</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-15-hitta-procenten.html" class="task-link" id="task-15">
+                            <div class="task-number"><span>15</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Hitta procenten</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- GRUPP 4: Decimalform -->
+            <div class="task-group">
+                <h3 class="task-group-title">Del 4: Bråk och decimal</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <a href="uppgift-16-brak-decimal.html" class="task-link" id="task-16">
+                            <div class="task-number"><span>16</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Bråk och decimal</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-17-halva-decimal.html" class="task-link" id="task-17">
+                            <div class="task-number"><span>17</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Halva som decimal</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-18-fjardedel-decimal.html" class="task-link" id="task-18">
+                            <div class="task-number"><span>18</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Fjärdedel som decimal</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-19-tiondel-decimal.html" class="task-link" id="task-19">
+                            <div class="task-number"><span>19</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Tiondel som decimal</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-20-decimal-till-brak.html" class="task-link" id="task-20">
+                            <div class="task-number"><span>20</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Decimal till bråk</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- GRUPP 5: Jämföra och ordna -->
+            <div class="task-group">
+                <h3 class="task-group-title">Del 5: Jämföra och ordna</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <a href="uppgift-21-jamfora-brak.html" class="task-link" id="task-21">
+                            <div class="task-number"><span>21</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Jämföra bråk</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-22-storsta-braken.html" class="task-link" id="task-22">
+                            <div class="task-number"><span>22</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Största bråket</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-23-ordna-brak.html" class="task-link" id="task-23">
+                            <div class="task-number"><span>23</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Ordna bråk</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-24-brak-procent.html" class="task-link" id="task-24">
+                            <div class="task-number"><span>24</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Bråk och procent</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-25-allt-ihop.html" class="task-link" id="task-25">
+                            <div class="task-number"><span>25</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Allt ihop!</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- GRUPP 6: Procent och rabatt -->
+            <div class="task-group">
+                <h3 class="task-group-title">Del 6: Procent och rabatt</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <a href="uppgift-26-20-procent.html" class="task-link" id="task-26">
+                            <div class="task-number"><span>26</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Räkna 20%</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-27-25-procent.html" class="task-link" id="task-27">
+                            <div class="task-number"><span>27</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Räkna 25%</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-28-rabatt-procent.html" class="task-link" id="task-28">
+                            <div class="task-number"><span>28</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Rabatt i procent</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-29-nytt-pris.html" class="task-link" id="task-29">
+                            <div class="task-number"><span>29</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Nytt pris</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-30-verkligt-problem.html" class="task-link" id="task-30">
+                            <div class="task-number"><span>30</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Verkligt problem</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- GRUPP 7: Sannolikhet -->
+            <div class="task-group">
+                <h3 class="task-group-title">Del 7: Sannolikhet</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <a href="uppgift-31-vad-ar-sannolikhet.html" class="task-link" id="task-31">
+                            <div class="task-number"><span>31</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Vad är sannolikhet?</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-32-mojliga-utfall.html" class="task-link" id="task-32">
+                            <div class="task-number"><span>32</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Möjliga utfall</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-33-gynnsamma-utfall.html" class="task-link" id="task-33">
+                            <div class="task-number"><span>33</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Gynnsamma utfall</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-34-rakna-sannolikhet.html" class="task-link" id="task-34">
+                            <div class="task-number"><span>34</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Räkna sannolikhet</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-35-sannolikhet-procent.html" class="task-link" id="task-35">
+                            <div class="task-number"><span>35</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Sannolikhet i procent</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- GRUPP 8: Förlänga och förkorta -->
+            <div class="task-group">
+                <h3 class="task-group-title">Del 8: Förlänga och förkorta</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <a href="uppgift-36-forlanga-brak.html" class="task-link" id="task-36">
+                            <div class="task-number"><span>36</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Förlänga bråk</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-37-forkorta-enklaste.html" class="task-link" id="task-37">
+                            <div class="task-number"><span>37</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Förkorta till enklaste</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-38-gemensam-namnare.html" class="task-link" id="task-38">
+                            <div class="task-number"><span>38</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Gemensam nämnare</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-39-jamfora-brak.html" class="task-link" id="task-39">
+                            <div class="task-number"><span>39</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Jämföra bråk</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-40-brak-problem.html" class="task-link" id="task-40">
+                            <div class="task-number"><span>40</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Bråk-problem</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- GRUPP 9: Blandad form och räkning -->
+            <div class="task-group">
+                <h3 class="task-group-title">Del 9: Blandad form och räkning</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <a href="uppgift-41-blandad-form.html" class="task-link" id="task-41">
+                            <div class="task-number"><span>41</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Blandad form</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-42-blandad-till-brak.html" class="task-link" id="task-42">
+                            <div class="task-number"><span>42</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Blandad till bråk</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-43-brak-till-blandad.html" class="task-link" id="task-43">
+                            <div class="task-number"><span>43</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Bråk till blandad</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-44-addera-brak.html" class="task-link" id="task-44">
+                            <div class="task-number"><span>44</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Addera bråk</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-45-subtrahera-brak.html" class="task-link" id="task-45">
+                            <div class="task-number"><span>45</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Subtrahera bråk</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- GRUPP 10: Problemlösning -->
+            <div class="task-group">
+                <h3 class="task-group-title">Del 10: Problemlösning</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <a href="uppgift-46-brak-av-heltal.html" class="task-link" id="task-46">
+                            <div class="task-number"><span>46</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Bråk av heltal</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-47-procent-problem.html" class="task-link" id="task-47">
+                            <div class="task-number"><span>47</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Procent-problem</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-48-blanda-procent-brak.html" class="task-link" id="task-48">
+                            <div class="task-number"><span>48</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Blanda procent & bråk</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-49-sannolikhet-problem.html" class="task-link" id="task-49">
+                            <div class="task-number"><span>49</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Sannolikhet-problem</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-50-blandade-problem.html" class="task-link" id="task-50">
+                            <div class="task-number"><span>50</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Blandade problem</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- GRUPP 11: Repetition och avslut -->
+            <div class="task-group">
+                <h3 class="task-group-title">Del 11: Repetition och avslut</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <a href="uppgift-51-repetition-brak.html" class="task-link" id="task-51">
+                            <div class="task-number"><span>51</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Repetition: Bråk</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-52-repetition-procent.html" class="task-link" id="task-52">
+                            <div class="task-number"><span>52</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Repetition: Procent</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-53-repetition-decimal.html" class="task-link" id="task-53">
+                            <div class="task-number"><span>53</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Repetition: Decimal</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-54-slutuppgift.html" class="task-link" id="task-54">
+                            <div class="task-number"><span>54</span></div>
+                            <div class="task-content">
+                                <div class="task-name">Slutuppgift</div>
+                                <div class="task-time">⏱️ Ca 30 sekunder</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="task-item">
+                        <a href="uppgift-55-grattis.html" class="task-link" id="task-55">
+                            <div class="task-number"><span>55</span></div>
+                            <div class="task-content">
+                                <div class="task-name">GRATTIS!</div>
+                                <div class="task-time">🎉 Avslutning</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- TIPS -->
+        <section class="tips-section">
+            <div class="tips-title">Tips för dig, Esther!</div>
+            <ul class="tips-list">
+                <li>Ha papper och penna bredvid dig för uträkningar</li>
+                <li>Läs instruktionerna hela vägen innan du börjar</li>
+                <li>Ta en paus var 20:e minut - det hjälper hjärnan!</li>
+                <li>Det är helt okej att göra fel - vi lär oss av misstag</li>
+            </ul>
+        </section>
+    </div>
+
+    <!-- PAUS-KNAPP -->
+    <button class="pause-button" onclick="showPause()">
+        🧘 Jag behöver en paus
+    </button>
+
+    <!-- PAUS-MODAL -->
+    <div class="pause-modal" id="pause-modal">
+        <div class="pause-content">
+            <h2>Paus! 🌟</h2>
+            <p>
+                Bra att du tar en paus! Rör på dig lite,
+                andas djupt, eller titta ut genom fönstret.
+                <br><br>
+                Kom tillbaka när du känner dig redo!
+            </p>
+            <button class="pause-close" onclick="hidePause()">
+                Jag är redo igen →
+            </button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        Skapad med ❤️ för Esther
+    </footer>
+
+    <script>
+        // === PROGRESS-HANTERING (NYTT SYSTEM) ===
+        function getCompletedTasks() {
+            try {
+                const data = localStorage.getItem('esther-completed-tasks');
+                return data ? JSON.parse(data) : [];
+            } catch(e) {
+                return [];
+            }
+        }
+
+        function getSkippedTasks() {
+            try {
+                const data = localStorage.getItem('esther-skipped-tasks');
+                return data ? JSON.parse(data) : [];
+            } catch(e) {
+                return [];
+            }
+        }
+
+        function updateProgress() {
+            const completedTasks = getCompletedTasks();
+            const skippedTasks = getSkippedTasks();
+            const total = 55; // Alla 55 uppgifter
+            const completedCount = completedTasks.length;
+            const percent = (completedCount / total) * 100;
+
+            document.getElementById('progress-bar').style.width = percent + '%';
+            document.getElementById('progress-text').textContent = completedCount + ' av ' + total + ' klara';
+
+            // Uppdatera tidsuppskattning
+            const remaining = total - completedCount;
+            const sessions = Math.ceil(remaining / 20);
+            if (completedCount === 0) {
+                document.getElementById('time-estimate').textContent = 'Du har precis börjat!';
+            } else if (remaining <= 5) {
+                document.getElementById('time-estimate').textContent = 'Nästan klar!';
+            } else {
+                document.getElementById('time-estimate').textContent = 'Ca ' + sessions + ' sessioner kvar';
+            }
+
+            // Markera KLARADE uppgifter (grön bock)
+            completedTasks.forEach(taskNum => {
+                const task = document.getElementById('task-' + taskNum);
+                if (task) {
+                    task.classList.add('completed');
+                    task.classList.remove('current', 'skipped');
+                }
+            });
+
+            // Markera ÖVERHOPPADE uppgifter (orange cirkel)
+            skippedTasks.forEach(taskNum => {
+                if (!completedTasks.includes(taskNum)) {
+                    const task = document.getElementById('task-' + taskNum);
+                    if (task) {
+                        task.classList.add('skipped');
+                        task.classList.remove('current', 'completed');
+                    }
+                }
+            });
+
+            // Hitta första ej avklarade uppgift och markera som "current"
+            for (let i = 1; i <= total; i++) {
+                if (!completedTasks.includes(i)) {
+                    const task = document.getElementById('task-' + i);
+                    if (task && !task.classList.contains('skipped')) {
+                        task.classList.add('current');
+                        const statusEl = task.querySelector('.task-status');
+                        if (statusEl) statusEl.textContent = 'Börja här →';
+                    }
+                    break;
+                }
+            }
+
+            // Uppdatera progress-info med antal överhoppade
+            const skippedCount = skippedTasks.filter(t => !completedTasks.includes(t)).length;
+            if (skippedCount > 0) {
+                const infoEl = document.querySelector('.progress-info span:first-child');
+                if (infoEl) {
+                    infoEl.textContent = skippedCount + ' uppgift(er) överhoppade';
+                    infoEl.style.color = '#ff9800';
+                }
+            }
+        }
+
+        // Kör vid sidladdning
+        updateProgress();
+
+        // === PAUS-FUNKTIONER ===
+        function showPause() {
+            document.getElementById('pause-modal').classList.add('active');
+        }
+
+        function hidePause() {
+            document.getElementById('pause-modal').classList.remove('active');
+        }
+
+        // Stäng modal med Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') hidePause();
+        });
+    </script>
+</body>
+</html>

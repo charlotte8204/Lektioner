@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uppgift 45: Subtrahera bråk - Esthers Matte</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Verdana, Geneva, sans-serif; font-size: 18px; line-height: 1.7; background: linear-gradient(135deg, #fdf6f9 0%, #f0f4f8 100%); min-height: 100vh; color: #4a4a4a; }
+        :root { --pastel-pink: #f8e1e8; --pastel-blue: #e1ecf8; --pastel-green: #e1f8e8; --pastel-yellow: #f8f4e1; --text-dark: #4a4a4a; --text-medium: #6a6a6a; --accent-pink: #d4a5b5; --success-green: #98d4a5; --white: #ffffff; }
+        .page-container { display: flex; min-height: 100vh; }
+        .sidebar { width: 220px; background: var(--white); padding: 25px 20px; border-right: 1px solid #eee; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-title { font-size: 14px; color: var(--text-medium); margin-bottom: 15px; text-transform: uppercase; }
+        .nav-list { list-style: none; }
+        .nav-item { margin-bottom: 8px; }
+        .nav-link { display: block; padding: 10px 12px; text-decoration: none; color: var(--text-medium); border-radius: 8px; font-size: 14px; }
+        .nav-link:hover { background: var(--pastel-blue); }
+        .nav-link.current { background: var(--pastel-pink); color: var(--text-dark); font-weight: 600; }
+        .you-are-here { font-size: 11px; color: var(--accent-pink); display: block; margin-top: 2px; }
+        .main-content { flex: 1; margin-left: 220px; padding: 30px 50px; max-width: 800px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .back-link { color: var(--accent-pink); text-decoration: none; font-size: 15px; }
+        .progress-mini { font-size: 14px; color: var(--text-medium); background: var(--pastel-blue); padding: 8px 15px; border-radius: 20px; }
+        .content-card { background: var(--white); border-radius: 20px; padding: 35px 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .page-title { font-size: 24px; color: var(--text-dark); margin-bottom: 8px; }
+        .page-subtitle { font-size: 15px; color: var(--text-medium); margin-bottom: 25px; }
+        .start-indicator { display: inline-block; background: var(--pastel-green); color: #5a9a6a; padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-bottom: 20px; }
+        .explanation { background: var(--pastel-yellow); border-radius: 15px; padding: 25px; margin-bottom: 25px; }
+        .explanation-text { font-size: 18px; line-height: 1.8; }
+        .highlight-concept { background: #f0e8c8; padding: 2px 8px; border-radius: 5px; font-weight: 600; }
+        .visual-example { text-align: center; margin: 25px 0; background: var(--pastel-blue); border-radius: 15px; padding: 25px; }
+        .subtraction-visual { display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
+        .fraction-circle { width: 70px; height: 70px; border-radius: 50%; border: 3px solid var(--accent-pink); position: relative; overflow: hidden; background: #eee; }
+        .fraction-fill { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(135deg, #f8d4e4 0%, #e8b4d4 100%); }
+        .minus-sign { font-size: 28px; color: var(--accent-pink); font-weight: 600; }
+        .equals-sign { font-size: 28px; color: var(--accent-pink); font-weight: 600; }
+        .visual-label { font-size: 18px; color: var(--text-dark); font-weight: 600; margin-top: 10px; }
+        .encouragement { text-align: center; font-size: 16px; color: var(--text-medium); font-style: italic; margin: 20px 0; }
+        .task-section { background: var(--pastel-pink); border-radius: 15px; padding: 25px; margin-top: 25px; }
+        .task-title { font-size: 18px; font-weight: 600; color: var(--text-dark); margin-bottom: 15px; }
+        .task-instruction { font-size: 16px; color: var(--text-medium); margin-bottom: 20px; }
+        .problem-display { font-size: 28px; font-weight: 600; text-align: center; margin: 20px 0; color: var(--text-dark); }
+        .answer-options { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin: 20px 0; }
+        .option-btn { padding: 15px 30px; font-size: 20px; font-weight: 600; background: white; border: 3px solid #ddd; border-radius: 15px; cursor: pointer; font-family: Verdana; }
+        .option-btn:hover { border-color: var(--accent-pink); }
+        .option-btn.correct { border-color: var(--success-green); background: var(--pastel-green); }
+        .option-btn.incorrect { border-color: #e8a5a5; background: #f8e8e8; }
+        .feedback { margin-top: 20px; padding: 15px 20px; border-radius: 10px; display: none; text-align: center; }
+        .feedback.show { display: block; }
+        .feedback.correct { background: var(--pastel-green); color: #4a7a5a; }
+        .feedback.incorrect { background: #f8e8e8; color: #7a4a4a; }
+        .success-section { display: none; text-align: center; margin-top: 25px; padding: 25px; background: var(--pastel-green); border-radius: 15px; }
+        .success-section.show { display: block; }
+        .success-message { font-size: 20px; color: #4a7a5a; margin-bottom: 20px; }
+        .next-btn { background: var(--success-green); color: white; border: none; padding: 15px 35px; border-radius: 30px; font-family: Verdana; font-size: 18px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .pause-button { position: fixed; bottom: 30px; right: 30px; background: var(--pastel-green); border: none; padding: 12px 20px; border-radius: 25px; font-family: Verdana; font-size: 14px; color: var(--text-dark); cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .hint-button { background: #b8a5d4; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-family: Verdana; font-size: 14px; cursor: pointer; margin-top: 15px; }
+        .hint-button:disabled { background: #ccc; }
+        .hint-section { background: linear-gradient(135deg, #efe1f8 0%, #e8d4f4 100%); border-radius: 15px; padding: 20px 25px; margin-top: 20px; border-left: 4px solid #b8a5d4; display: none; }
+        .hint-section.show { display: block; }
+        .hint-step { background: white; border-radius: 10px; padding: 15px; border-left: 3px solid #b8a5d4; display: none; }
+        .hint-step.show { display: block; }
+        .hint-step-number { font-size: 12px; color: #9a8aaa; margin-bottom: 5px; font-weight: 600; }
+        .hint-step-text { font-size: 16px; color: var(--text-dark); }
+        .hint-progress { display: flex; gap: 8px; margin-top: 15px; }
+        .hint-dot { width: 10px; height: 10px; border-radius: 50%; background: #d4c5e4; }
+        .hint-dot.active { background: #b8a5d4; }
+        .pause-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .pause-modal.active { display: flex; }
+        .pause-content { background: white; padding: 40px; border-radius: 20px; text-align: center; max-width: 400px; }
+        .pause-content h2 { margin-bottom: 15px; }
+        .pause-content p { margin-bottom: 25px; color: var(--text-medium); }
+        .pause-close { background: var(--accent-pink); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-family: Verdana; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <nav class="sidebar">
+            <div class="sidebar-title">Innehåll</div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="index.html" class="nav-link">← Tillbaka</a></li>
+                <li class="nav-item"><a href="uppgift-43-brak-till-blandad.html" class="nav-link">43. Bråk till blandad</a></li>
+                <li class="nav-item"><a href="uppgift-44-addera-brak.html" class="nav-link">44. Addera bråk</a></li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link current">45. Subtrahera bråk<span class="you-are-here">← Du är här</span></a>
+                </li>
+                <li class="nav-item"><a href="uppgift-46-brak-av-heltal.html" class="nav-link">46. Bråk av heltal</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <div class="top-bar">
+                <a href="index.html" class="back-link">← Alla uppgifter</a>
+                <span class="progress-mini">Uppgift 45 av 55</span>
+            </div>
+
+            <div class="content-card">
+                <h1 class="page-title">Subtrahera bråk</h1>
+                <p class="page-subtitle">Minus med samma nämnare!</p>
+
+                <div class="start-indicator">▶ BÖRJA HÄR</div>
+
+                <div class="explanation">
+                    <p class="explanation-text">
+                        Med <span class="highlight-concept">samma nämnare</span>: subtrahera bara täljarna!
+                        <br><br>
+                        Precis som addition - men minus istället.
+                    </p>
+                </div>
+
+                <div class="visual-example">
+                    <div class="subtraction-visual">
+                        <div class="fraction-circle">
+                            <div class="fraction-fill" style="height: 75%;"></div>
+                        </div>
+                        <div class="minus-sign">−</div>
+                        <div class="fraction-circle">
+                            <div class="fraction-fill" style="height: 25%;"></div>
+                        </div>
+                        <div class="equals-sign">=</div>
+                        <div class="fraction-circle">
+                            <div class="fraction-fill" style="height: 50%;"></div>
+                        </div>
+                    </div>
+                    <div class="visual-label">3/4 − 1/4 = 2/4</div>
+                </div>
+
+                <p class="encouragement">
+                    Samma nämnare = bara subtrahera täljarna! ➖
+                </p>
+
+                <div class="task-section">
+                    <h2 class="task-title">✏️ Prova själv!</h2>
+                    <p class="task-instruction">
+                        Räkna ut differensen!
+                    </p>
+
+                    <div class="problem-display">5/6 − 2/6 = ?</div>
+
+                    <div class="answer-options">
+                        <button class="option-btn" onclick="checkOption(this, true)">3/6</button>
+                        <button class="option-btn" onclick="checkOption(this, false)">3/12</button>
+                        <button class="option-btn" onclick="checkOption(this, false)">7/6</button>
+                    </div>
+
+                    <div class="feedback" id="feedback"></div>
+
+                    <button class="hint-button" onclick="showNextHint()">💡 Jag behöver en ledtråd</button>
+
+                    <div class="hint-section" id="hint-section">
+                        <div class="hint-step" id="hint-1">
+                            <div class="hint-step-number">STEG 1</div>
+                            <p class="hint-step-text">
+                                Samma nämnare (6)!<br>
+                                Subtrahera täljarna: 5 − 2 = 3<br>
+                                Svar: 3/6 (= 1/2)
+                            </p>
+                        </div>
+                        <div class="hint-progress">
+                            <span class="hint-dot" id="dot-1"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="success-section" id="success">
+                    <p class="success-message">🎉 Perfekt! 5−2=3 → 3/6! Del 9 avklarat!</p>
+                    <a href="uppgift-46-brak-av-heltal.html" class="next-btn">Nästa uppgift →</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <button class="pause-button" onclick="showPause()">🧘 Paus</button>
+
+    <div class="pause-modal" id="pause-modal">
+        <div class="pause-content">
+            <h2>Paus! 🌟</h2>
+            <p>Du kan räkna med bråk nu - 45 uppgifter klara!</p>
+            <button class="pause-close" onclick="hidePause()">Jag är redo igen →</button>
+        </div>
+    </div>
+
+    <script>
+        let answered = false;
+        let currentHint = 0;
+
+        function showNextHint() {
+            const hintSection = document.getElementById('hint-section');
+            const hintButton = document.querySelector('.hint-button');
+            if (!hintSection.classList.contains('show')) hintSection.classList.add('show');
+            currentHint++;
+            if (currentHint <= 1) {
+                document.getElementById('hint-' + currentHint).classList.add('show');
+                document.getElementById('dot-' + currentHint).classList.add('active');
+                hintButton.disabled = true;
+            }
+        }
+
+        function checkOption(element, isCorrect) {
+            if (answered) return;
+            const feedback = document.getElementById('feedback');
+            if (isCorrect) {
+                answered = true;
+                element.classList.add('correct');
+                feedback.textContent = 'Toppen! 5/6 − 2/6 = 3/6 ⭐';
+                feedback.className = 'feedback show correct';
+                setTimeout(() => {
+                    document.getElementById('success').classList.add('show');
+                    markCompleted(45);
+                }, 1000);
+            } else {
+                element.classList.add('incorrect');
+                feedback.textContent = 'Bara täljarna subtraheras! 💪';
+                feedback.className = 'feedback show incorrect';
+                setTimeout(() => element.classList.remove('incorrect'), 1500);
+            }
+        }
+
+        function markCompleted(taskNumber) {
+            let completed = [];
+            try { completed = JSON.parse(localStorage.getItem('esther-completed-tasks')) || []; } catch(e) {}
+            if (!completed.includes(taskNumber)) {
+                completed.push(taskNumber);
+                localStorage.setItem('esther-completed-tasks', JSON.stringify(completed));
+            }
+        }
+
+        window.addEventListener('beforeunload', function() {
+            if (!document.getElementById('success').classList.contains('show')) {
+                let completed = []; try { completed = JSON.parse(localStorage.getItem('esther-completed-tasks')) || []; } catch(e) {}
+                if (!completed.includes(45)) {
+                    let skipped = []; try { skipped = JSON.parse(localStorage.getItem('esther-skipped-tasks')) || []; } catch(e) {}
+                    if (!skipped.includes(45)) { skipped.push(45); localStorage.setItem('esther-skipped-tasks', JSON.stringify(skipped)); }
+                }
+            }
+        });
+
+        function showPause() { document.getElementById('pause-modal').classList.add('active'); }
+        function hidePause() { document.getElementById('pause-modal').classList.remove('active'); }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') hidePause(); });
+    </script>
+</body>
+</html>

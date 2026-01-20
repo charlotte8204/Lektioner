@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uppgift 3: Täljare och nämnare - Esthers Matte</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 18px;
+            line-height: 1.7;
+            background: linear-gradient(135deg, #fdf6f9 0%, #f0f4f8 100%);
+            min-height: 100vh;
+            color: #4a4a4a;
+        }
+
+        :root {
+            --pastel-pink: #f8e1e8;
+            --pastel-blue: #e1ecf8;
+            --pastel-green: #e1f8e8;
+            --pastel-yellow: #f8f4e1;
+            --text-dark: #4a4a4a;
+            --text-medium: #6a6a6a;
+            --accent-pink: #d4a5b5;
+            --accent-blue: #a5c4d4;
+            --success-green: #98d4a5;
+            --white: #ffffff;
+        }
+
+        .page-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* === SIDEBAR === */
+        .sidebar {
+            width: 220px;
+            background: var(--white);
+            padding: 25px 20px;
+            border-right: 1px solid #eee;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            color: var(--text-medium);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 10px 12px;
+            text-decoration: none;
+            color: var(--text-medium);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background: var(--pastel-blue);
+        }
+
+        .nav-link.current {
+            background: var(--pastel-pink);
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .nav-link.completed::before {
+            content: "✓ ";
+            color: var(--success-green);
+        }
+
+        .nav-link.skipped {
+            color: #ff9800;
+        }
+
+        .nav-link.skipped::before {
+            content: "○ ";
+        }
+
+        .you-are-here {
+            font-size: 11px;
+            color: var(--accent-pink);
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* === HUVUDINNEHÅLL === */
+        .main-content {
+            flex: 1;
+            margin-left: 220px;
+            padding: 30px 50px;
+            max-width: 800px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .back-link {
+            color: var(--accent-pink);
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .progress-mini {
+            font-size: 14px;
+            color: var(--text-medium);
+            background: var(--pastel-blue);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+
+        .content-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 35px 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .page-title {
+            font-size: 24px;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 15px;
+            color: var(--text-medium);
+            margin-bottom: 25px;
+        }
+
+        .start-indicator {
+            display: inline-block;
+            background: var(--pastel-green);
+            color: #5a9a6a;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* === FÖRKLARING === */
+        .explanation {
+            background: var(--pastel-yellow);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .explanation-text {
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        /* === BRÅK-VISUALISERING === */
+        .fraction-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 25px 0;
+        }
+
+        .big-fraction {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: var(--pastel-blue);
+            padding: 25px 50px;
+            border-radius: 20px;
+        }
+
+        .fraction-top {
+            font-size: 48px;
+            font-weight: bold;
+            color: #e07070;
+            position: relative;
+        }
+
+        .fraction-top::after {
+            content: "← TÄLJARE";
+            position: absolute;
+            left: 80px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: #e07070;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .fraction-line {
+            width: 80px;
+            height: 4px;
+            background: var(--text-dark);
+            margin: 10px 0;
+        }
+
+        .fraction-bottom {
+            font-size: 48px;
+            font-weight: bold;
+            color: #70a0e0;
+            position: relative;
+        }
+
+        .fraction-bottom::after {
+            content: "← NÄMNARE";
+            position: absolute;
+            left: 80px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: #70a0e0;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* === MINNESREGEL === */
+        .memory-box {
+            background: var(--pastel-pink);
+            border-radius: 15px;
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-pink);
+        }
+
+        .memory-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .memory-text {
+            font-size: 16px;
+            color: var(--text-medium);
+        }
+
+        .memory-text strong {
+            color: var(--text-dark);
+        }
+
+        .encouragement {
+            text-align: center;
+            font-size: 16px;
+            color: var(--text-medium);
+            font-style: italic;
+            margin: 20px 0;
+        }
+
+        /* === UPPGIFT === */
+        .task-section {
+            background: var(--pastel-pink);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+        }
+
+        .task-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .task-instruction {
+            font-size: 16px;
+            color: var(--text-medium);
+            margin-bottom: 15px;
+        }
+
+        /* === DRA-OCH-SLÄPP STIL === */
+        .drag-task {
+            margin-top: 20px;
+        }
+
+        .drag-question {
+            font-size: 18px;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .example-fraction {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px auto;
+            width: fit-content;
+        }
+
+        .example-top {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--text-dark);
+            padding: 10px 20px;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .example-line {
+            width: 60px;
+            height: 3px;
+            background: var(--text-dark);
+        }
+
+        .example-bottom {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--text-dark);
+            padding: 10px 20px;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .drop-zones {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 25px;
+        }
+
+        .drop-zone {
+            width: 140px;
+            height: 80px;
+            border: 3px dashed #ccc;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .drop-zone.highlight {
+            border-color: var(--accent-pink);
+            background: #fff5f8;
+        }
+
+        .drop-zone.correct {
+            border-color: var(--success-green);
+            border-style: solid;
+            background: var(--pastel-green);
+        }
+
+        .drop-zone.incorrect {
+            border-color: #e8a5a5;
+            border-style: solid;
+            background: #f8e8e8;
+        }
+
+        .zone-label {
+            font-size: 14px;
+            color: var(--text-medium);
+            margin-bottom: 5px;
+        }
+
+        .zone-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        .draggable-items {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .draggable {
+            width: 70px;
+            height: 70px;
+            background: var(--accent-blue);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            cursor: grab;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .draggable:hover {
+            transform: scale(1.05);
+        }
+
+        .draggable.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .draggable.placed {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: none;
+            text-align: center;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: var(--pastel-green);
+            color: #4a7a5a;
+        }
+
+        .feedback.incorrect {
+            background: #f8e8e8;
+            color: #7a4a4a;
+        }
+
+        .check-btn {
+            display: block;
+            margin: 20px auto 0;
+            background: var(--accent-pink);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-family: Verdana;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .check-btn:hover {
+            background: #c495a5;
+        }
+
+        /* === FRAMGÅNG === */
+        .success-section {
+            display: none;
+            text-align: center;
+            margin-top: 25px;
+            padding: 25px;
+            background: var(--pastel-green);
+            border-radius: 15px;
+        }
+
+        .success-section.show {
+            display: block;
+        }
+
+        .success-message {
+            font-size: 20px;
+            color: #4a7a5a;
+            margin-bottom: 20px;
+        }
+
+        .next-btn {
+            background: var(--success-green);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 30px;
+            font-family: Verdana;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .next-btn:hover {
+            background: #88c498;
+            transform: scale(1.03);
+        }
+
+        /* === PAUS === */
+        .pause-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--pastel-green);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-family: Verdana;
+            font-size: 14px;
+            color: var(--text-dark);
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* === LEDTRÅD-KNAPP OCH SEKTION === */
+        .hint-button {
+            background: #b8a5d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-family: Verdana;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hint-button:hover {
+            background: #a090c4;
+            transform: scale(1.02);
+        }
+
+        .hint-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .hint-section {
+            background: linear-gradient(135deg, #efe1f8 0%, #e8d4f4 100%);
+            border-radius: 15px;
+            padding: 20px 25px;
+            margin-top: 20px;
+            border-left: 4px solid #b8a5d4;
+            display: none;
+        }
+
+        .hint-section.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hint-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .hint-icon { font-size: 24px; }
+
+        .hint-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #6a5a7a;
+        }
+
+        .hint-encouragement {
+            font-size: 14px;
+            color: #7a6a8a;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .hint-step {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 3px solid #b8a5d4;
+            display: none;
+        }
+
+        .hint-step.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        .hint-step-number {
+            font-size: 12px;
+            color: #9a8aaa;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .hint-step-text {
+            font-size: 16px;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .hint-progress {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .hint-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #d4c5e4;
+        }
+
+        .hint-dot.active { background: #b8a5d4; }
+
+        .hint-complete {
+            text-align: center;
+            color: #6a5a7a;
+            font-size: 14px;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 8px;
+            display: none;
+        }
+
+        .hint-complete.show { display: block; }
+
+        .pause-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pause-modal.active {
+            display: flex;
+        }
+
+        .pause-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .pause-content h2 {
+            margin-bottom: 15px;
+        }
+
+        .pause-content p {
+            margin-bottom: 25px;
+            color: var(--text-medium);
+        }
+
+        .pause-close {
+            background: var(--accent-pink);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-family: Verdana;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Kommentar för förälder/pedagog:
+         Uppgift 3: Lär ut begreppen täljare och nämnare.
+         Minnesregel: "Nämnaren Nämner hur många delar totalt"
+         Interaktiv uppgift där Esther drar rätt siffra till rätt plats.
+    -->
+
+    <div class="page-container">
+        <nav class="sidebar">
+            <div class="sidebar-title">Innehåll</div>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">← Tillbaka</a>
+                </li>
+                <li class="nav-item">
+                    <a href="uppgift-01-vad-ar-brak.html" class="nav-link completed">1. Vad är ett bråk?</a>
+                </li>
+                <li class="nav-item">
+                    <a href="uppgift-02-delar-av-en-hel.html" class="nav-link completed">2. Delar av en hel</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link current">
+                        3. Täljare och nämnare
+                        <span class="you-are-here">← Du är här</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <div class="top-bar">
+                <a href="index.html" class="back-link">← Alla uppgifter</a>
+                <span class="progress-mini">Uppgift 3 av 55</span>
+            </div>
+
+            <div class="content-card">
+                <h1 class="page-title">Täljare och nämnare</h1>
+                <p class="page-subtitle">De två delarna i ett bråk har namn!</p>
+
+                <div class="start-indicator">▶ BÖRJA HÄR</div>
+
+                <!-- FÖRKLARING -->
+                <div class="explanation">
+                    <p class="explanation-text">
+                        Ett bråk har två delar:
+                        <br>• <strong style="color: #e07070;">Täljaren</strong> (överst) – hur många delar du har
+                        <br>• <strong style="color: #70a0e0;">Nämnaren</strong> (underst) – hur många delar totalt
+                    </p>
+                </div>
+
+                <!-- VISUELL FRAKTION -->
+                <div class="fraction-visual">
+                    <div class="big-fraction">
+                        <div class="fraction-top">3</div>
+                        <div class="fraction-line"></div>
+                        <div class="fraction-bottom">4</div>
+                    </div>
+                </div>
+
+                <!-- MINNESREGEL -->
+                <div class="memory-box">
+                    <div class="memory-title">💡 Minneshjälp</div>
+                    <p class="memory-text">
+                        <strong>"Nämnaren Nämner hur många delar det finns totalt"</strong>
+                        <br>
+                        Tänk: Du har gjort 3 av 4 slalomåk idag. 3 = täljare, 4 = nämnare ⛷️
+                    </p>
+                </div>
+
+                <p class="encouragement">
+                    Nu kan du namnen! 🌟
+                </p>
+
+                <!-- UPPGIFT -->
+                <div class="task-section">
+                    <h2 class="task-title">✏️ Prova själv!</h2>
+                    <p class="task-instruction">
+                        Titta på bråket nedan. Dra siffran till rätt plats!
+                    </p>
+
+                    <div class="drag-task">
+                        <div class="drag-question">
+                            I bråket <strong>5/8</strong> – vilken siffra är täljaren och vilken är nämnaren?
+                        </div>
+
+                        <div class="drop-zones">
+                            <div class="drop-zone" id="drop-taljare" data-expects="5"
+                                 ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                                <span class="zone-label">TÄLJARE</span>
+                                <span class="zone-value" id="taljare-value">?</span>
+                            </div>
+                            <div class="drop-zone" id="drop-namnare" data-expects="8"
+                                 ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                                <span class="zone-label">NÄMNARE</span>
+                                <span class="zone-value" id="namnare-value">?</span>
+                            </div>
+                        </div>
+
+                        <div class="draggable-items">
+                            <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag-5" data-value="5">5</div>
+                            <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag-8" data-value="8">8</div>
+                        </div>
+
+                        <button class="check-btn" onclick="checkAnswer()">Kolla svaret</button>
+                    </div>
+
+                    <div class="feedback" id="feedback"></div>
+
+                    <!-- LEDTRÅD-KNAPP -->
+                    <button class="hint-button" onclick="showNextHint()">
+                        💡 Jag behöver en ledtråd
+                    </button>
+
+                    <!-- LEDTRÅD-SEKTION (komplex uppgift = fler ledtrådar) -->
+                    <div class="hint-section" id="hint-section">
+                        <div class="hint-header">
+                            <span class="hint-icon">💡</span>
+                            <span class="hint-title">Ledtrådar</span>
+                        </div>
+                        <p class="hint-encouragement">Bra att du frågar om hjälp! Det visar att du är smart. 🌟</p>
+
+                        <div class="hint-step" id="hint-1">
+                            <div class="hint-step-number">STEG 1</div>
+                            <p class="hint-step-text">
+                                Titta på bråket <strong>5/8</strong>.
+                                Vilken siffra står <strong>överst</strong>? Det är täljaren!
+                            </p>
+                        </div>
+
+                        <div class="hint-step" id="hint-2">
+                            <div class="hint-step-number">STEG 2</div>
+                            <p class="hint-step-text">
+                                <strong>5</strong> står överst i bråket 5/8.
+                                <br>Så <strong>5 är täljaren</strong> – dra den till TÄLJARE-rutan.
+                            </p>
+                        </div>
+
+                        <div class="hint-step" id="hint-3">
+                            <div class="hint-step-number">STEG 3</div>
+                            <p class="hint-step-text">
+                                <strong>8</strong> står underst i bråket 5/8.
+                                <br>Så <strong>8 är nämnaren</strong> – dra den till NÄMNARE-rutan.
+                                <br><br>
+                                ✨ Kom ihåg: "Nämnaren <strong>N</strong>ämner hur många delar totalt"!
+                            </p>
+                        </div>
+
+                        <div class="hint-progress">
+                            <span class="hint-dot" id="dot-1"></span>
+                            <span class="hint-dot" id="dot-2"></span>
+                            <span class="hint-dot" id="dot-3"></span>
+                        </div>
+
+                        <p class="hint-complete" id="hint-complete">
+                            ✅ Du har sett alla ledtrådar! Dra nu siffrorna till rätt rutor.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FRAMGÅNG -->
+                <div class="success-section" id="success">
+                    <p class="success-message">🎉 Perfekt, Esther! Du kan täljare och nämnare!</p>
+                    <a href="uppgift-04-halva-tredjedel.html" class="next-btn">
+                        Nästa uppgift →
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <button class="pause-button" onclick="showPause()">🧘 Paus</button>
+
+    <div class="pause-modal" id="pause-modal">
+        <div class="pause-content">
+            <h2>Paus! 🌟</h2>
+            <p>Bra jobbat hittills! Ta en paus och kom tillbaka när du är redo.</p>
+            <button class="pause-close" onclick="hidePause()">Jag är redo igen →</button>
+        </div>
+    </div>
+
+    <script>
+        let taljareValue = null;
+        let namnareValue = null;
+        let attempts = 0;
+        let currentHint = 0;
+        const totalHints = 3;
+
+        // === LEDTRÅD-FUNKTION ===
+        function showNextHint() {
+            const hintSection = document.getElementById('hint-section');
+            const hintButton = document.querySelector('.hint-button');
+
+            if (!hintSection.classList.contains('show')) {
+                hintSection.classList.add('show');
+            }
+
+            currentHint++;
+
+            if (currentHint <= totalHints) {
+                document.getElementById('hint-' + currentHint).classList.add('show');
+                document.getElementById('dot-' + currentHint).classList.add('active');
+
+                if (currentHint < totalHints) {
+                    hintButton.innerHTML = '💡 Visa nästa steg (' + currentHint + '/' + totalHints + ')';
+                } else {
+                    hintButton.innerHTML = '💡 Alla ledtrådar visade';
+                    hintButton.disabled = true;
+                    document.getElementById('hint-complete').classList.add('show');
+                }
+            }
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.target.closest('.drop-zone').classList.add('highlight');
+        }
+
+        function dragLeave(ev) {
+            ev.target.closest('.drop-zone').classList.remove('highlight');
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+            ev.dataTransfer.setData("value", ev.target.dataset.value);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            const dropZone = ev.target.closest('.drop-zone');
+            dropZone.classList.remove('highlight');
+
+            const draggedId = ev.dataTransfer.getData("text");
+            const value = ev.dataTransfer.getData("value");
+            const draggedEl = document.getElementById(draggedId);
+
+            // Markera som placerad
+            draggedEl.classList.add('placed');
+
+            // Uppdatera drop-zonen
+            if (dropZone.id === 'drop-taljare') {
+                taljareValue = value;
+                document.getElementById('taljare-value').textContent = value;
+            } else if (dropZone.id === 'drop-namnare') {
+                namnareValue = value;
+                document.getElementById('namnare-value').textContent = value;
+            }
+        }
+
+        function checkAnswer() {
+            const feedback = document.getElementById('feedback');
+            const dropTaljare = document.getElementById('drop-taljare');
+            const dropNamnare = document.getElementById('drop-namnare');
+
+            attempts++;
+
+            // Kolla om båda är ifyllda
+            if (!taljareValue || !namnareValue) {
+                feedback.textContent = 'Dra båda siffrorna till rätt ruta först!';
+                feedback.className = 'feedback show incorrect';
+                return;
+            }
+
+            // Kolla svaret
+            if (taljareValue === '5' && namnareValue === '8') {
+                dropTaljare.classList.add('correct');
+                dropNamnare.classList.add('correct');
+                feedback.textContent = 'Helt rätt! 5 är täljaren (överst) och 8 är nämnaren (underst). ⛷️';
+                feedback.className = 'feedback show correct';
+
+                setTimeout(() => {
+                    document.getElementById('success').classList.add('show');
+                    markCompleted(3);
+                }, 1000);
+            } else {
+                dropTaljare.classList.add('incorrect');
+                dropNamnare.classList.add('incorrect');
+
+                if (attempts === 1) {
+                    feedback.textContent = 'Nästan! Kom ihåg: Täljaren är siffran ÖVERST i bråket.';
+                } else {
+                    feedback.textContent = 'Tips: I 5/8 står 5 överst (täljare) och 8 underst (nämnare). Försök igen!';
+                }
+                feedback.className = 'feedback show incorrect';
+
+                // Återställ för nytt försök
+                setTimeout(() => {
+                    resetDrag();
+                }, 2000);
+            }
+        }
+
+        function resetDrag() {
+            taljareValue = null;
+            namnareValue = null;
+
+            document.getElementById('taljare-value').textContent = '?';
+            document.getElementById('namnare-value').textContent = '?';
+
+            document.querySelectorAll('.drop-zone').forEach(z => {
+                z.classList.remove('correct', 'incorrect');
+            });
+
+            document.querySelectorAll('.draggable').forEach(d => {
+                d.classList.remove('placed');
+            });
+        }
+
+        function markCompleted(taskNumber) {
+            let completed = [];
+            try {
+                const data = localStorage.getItem('esther-completed-tasks');
+                completed = data ? JSON.parse(data) : [];
+            } catch(e) { completed = []; }
+
+            if (!completed.includes(taskNumber)) {
+                completed.push(taskNumber);
+                localStorage.setItem('esther-completed-tasks', JSON.stringify(completed));
+            }
+
+            let skipped = [];
+            try {
+                const data = localStorage.getItem('esther-skipped-tasks');
+                skipped = data ? JSON.parse(data) : [];
+            } catch(e) { skipped = []; }
+
+            const idx = skipped.indexOf(taskNumber);
+            if (idx > -1) {
+                skipped.splice(idx, 1);
+                localStorage.setItem('esther-skipped-tasks', JSON.stringify(skipped));
+            }
+        }
+
+        window.addEventListener('beforeunload', function() {
+            const success = document.getElementById('success');
+            if (success && !success.classList.contains('show')) {
+                let completed = [];
+                try {
+                    const data = localStorage.getItem('esther-completed-tasks');
+                    completed = data ? JSON.parse(data) : [];
+                } catch(e) { completed = []; }
+
+                if (!completed.includes(3)) {
+                    let skipped = [];
+                    try {
+                        const data = localStorage.getItem('esther-skipped-tasks');
+                        skipped = data ? JSON.parse(data) : [];
+                    } catch(e) { skipped = []; }
+
+                    if (!skipped.includes(3)) {
+                        skipped.push(3);
+                        localStorage.setItem('esther-skipped-tasks', JSON.stringify(skipped));
+                    }
+                }
+            }
+        });
+
+        function showPause() {
+            document.getElementById('pause-modal').classList.add('active');
+        }
+
+        function hidePause() {
+            document.getElementById('pause-modal').classList.remove('active');
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') hidePause();
+        });
+
+        // Touch-stöd för mobila enheter
+        document.querySelectorAll('.draggable').forEach(item => {
+            item.addEventListener('touchstart', handleTouchStart);
+            item.addEventListener('touchend', handleTouchEnd);
+        });
+
+        let draggedItem = null;
+
+        function handleTouchStart(e) {
+            draggedItem = e.target;
+            draggedItem.classList.add('dragging');
+        }
+
+        function handleTouchEnd(e) {
+            if (!draggedItem) return;
+
+            const touch = e.changedTouches[0];
+            const dropZones = document.querySelectorAll('.drop-zone');
+
+            dropZones.forEach(zone => {
+                const rect = zone.getBoundingClientRect();
+                if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+                    touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+
+                    const value = draggedItem.dataset.value;
+                    draggedItem.classList.add('placed');
+
+                    if (zone.id === 'drop-taljare') {
+                        taljareValue = value;
+                        document.getElementById('taljare-value').textContent = value;
+                    } else if (zone.id === 'drop-namnare') {
+                        namnareValue = value;
+                        document.getElementById('namnare-value').textContent = value;
+                    }
+                }
+            });
+
+            draggedItem.classList.remove('dragging');
+            draggedItem = null;
+        }
+    </script>
+</body>
+</html>

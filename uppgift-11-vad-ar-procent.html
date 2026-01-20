@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uppgift 11: Vad är procent? - Esthers Matte</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Verdana, Geneva, sans-serif; font-size: 18px; line-height: 1.7; background: linear-gradient(135deg, #fdf6f9 0%, #f0f4f8 100%); min-height: 100vh; color: #4a4a4a; }
+        :root { --pastel-pink: #f8e1e8; --pastel-blue: #e1ecf8; --pastel-green: #e1f8e8; --pastel-yellow: #f8f4e1; --text-dark: #4a4a4a; --text-medium: #6a6a6a; --accent-pink: #d4a5b5; --success-green: #98d4a5; --white: #ffffff; }
+        .page-container { display: flex; min-height: 100vh; }
+        .sidebar { width: 220px; background: var(--white); padding: 25px 20px; border-right: 1px solid #eee; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-title { font-size: 14px; color: var(--text-medium); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-list { list-style: none; }
+        .nav-item { margin-bottom: 8px; }
+        .nav-link { display: block; padding: 10px 12px; text-decoration: none; color: var(--text-medium); border-radius: 8px; font-size: 14px; transition: all 0.2s; }
+        .nav-link:hover { background: var(--pastel-blue); }
+        .nav-link.current { background: var(--pastel-pink); color: var(--text-dark); font-weight: 600; }
+        .nav-link.completed::before { content: "✓ "; color: var(--success-green); }
+        .nav-link.skipped {
+            color: #ff9800;
+        }
+
+        .nav-link.skipped::before {
+            content: "○ ";
+        }
+        .you-are-here { font-size: 11px; color: var(--accent-pink); display: block; margin-top: 2px; }
+        .main-content { flex: 1; margin-left: 220px; padding: 30px 50px; max-width: 800px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .back-link { color: var(--accent-pink); text-decoration: none; font-size: 15px; }
+        .progress-mini { font-size: 14px; color: var(--text-medium); background: var(--pastel-blue); padding: 8px 15px; border-radius: 20px; }
+        .content-card { background: var(--white); border-radius: 20px; padding: 35px 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .page-title { font-size: 24px; color: var(--text-dark); margin-bottom: 8px; }
+        .page-subtitle { font-size: 15px; color: var(--text-medium); margin-bottom: 25px; }
+        .start-indicator { display: inline-block; background: var(--pastel-green); color: #5a9a6a; padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-bottom: 20px; }
+        .explanation { background: var(--pastel-yellow); border-radius: 15px; padding: 25px; margin-bottom: 25px; }
+        .explanation-text { font-size: 18px; line-height: 1.8; }
+        .highlight-concept { background: #f0e8c8; padding: 2px 8px; border-radius: 5px; font-weight: 600; }
+        /* === VISUELLT === */
+        .visual-example { text-align: center; margin: 25px 0; }
+        .percent-grid { display: grid; grid-template-columns: repeat(10, 25px); gap: 3px; justify-content: center; margin-bottom: 15px; }
+        .grid-cell { width: 25px; height: 25px; border-radius: 4px; border: 1px solid #ddd; }
+        .grid-cell.filled { background: linear-gradient(135deg, #f8b4c4, #e899ac); }
+        .grid-cell.empty { background: #f5f5f5; }
+        .visual-label { font-size: 18px; color: var(--text-dark); font-weight: 600; }
+        .encouragement { text-align: center; font-size: 16px; color: var(--text-medium); font-style: italic; margin: 20px 0; }
+        /* === UPPGIFT === */
+        .task-section { background: var(--pastel-pink); border-radius: 15px; padding: 25px; margin-top: 25px; }
+        .task-title { font-size: 18px; font-weight: 600; color: var(--text-dark); margin-bottom: 15px; }
+        .task-instruction { font-size: 16px; color: var(--text-medium); margin-bottom: 20px; }
+        .task-problem { font-size: 20px; font-weight: 600; color: var(--text-dark); text-align: center; margin: 20px 0; }
+        .answer-options { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin: 20px 0; }
+        .option-btn { padding: 15px 30px; font-size: 18px; font-weight: 600; background: white; border: 3px solid #ddd; border-radius: 15px; cursor: pointer; transition: all 0.2s; font-family: Verdana; }
+        .option-btn:hover { border-color: var(--accent-pink); transform: scale(1.02); }
+        .option-btn.correct { border-color: var(--success-green); background: var(--pastel-green); }
+        .option-btn.incorrect { border-color: #e8a5a5; background: #f8e8e8; }
+        .feedback { margin-top: 20px; padding: 15px 20px; border-radius: 10px; display: none; text-align: center; }
+        .feedback.show { display: block; }
+        .feedback.correct { background: var(--pastel-green); color: #4a7a5a; }
+        .feedback.incorrect { background: #f8e8e8; color: #7a4a4a; }
+        .success-section { display: none; text-align: center; margin-top: 25px; padding: 25px; background: var(--pastel-green); border-radius: 15px; }
+        .success-section.show { display: block; }
+        .success-message { font-size: 20px; color: #4a7a5a; margin-bottom: 20px; }
+        .next-btn { background: var(--success-green); color: white; border: none; padding: 15px 35px; border-radius: 30px; font-family: Verdana; font-size: 18px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .next-btn:hover { background: #88c498; }
+        .pause-button { position: fixed; bottom: 30px; right: 30px; background: var(--pastel-green); border: none; padding: 12px 20px; border-radius: 25px; font-family: Verdana; font-size: 14px; color: var(--text-dark); cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .hint-button { background: #b8a5d4; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-family: Verdana; font-size: 14px; cursor: pointer; margin-top: 15px; }
+        .hint-button:hover { background: #a090c4; }
+        .hint-button:disabled { background: #ccc; cursor: not-allowed; }
+        .hint-section { background: linear-gradient(135deg, #efe1f8 0%, #e8d4f4 100%); border-radius: 15px; padding: 20px 25px; margin-top: 20px; border-left: 4px solid #b8a5d4; display: none; }
+        .hint-section.show { display: block; }
+        .hint-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .hint-icon { font-size: 24px; }
+        .hint-title { font-size: 16px; font-weight: 600; color: #6a5a7a; }
+        .hint-step { background: white; border-radius: 10px; padding: 15px; margin-bottom: 10px; border-left: 3px solid #b8a5d4; display: none; }
+        .hint-step.show { display: block; }
+        .hint-step-number { font-size: 12px; color: #9a8aaa; margin-bottom: 5px; font-weight: 600; }
+        .hint-step-text { font-size: 16px; color: var(--text-dark); }
+        .hint-progress { display: flex; gap: 8px; margin-top: 15px; }
+        .hint-dot { width: 10px; height: 10px; border-radius: 50%; background: #d4c5e4; }
+        .hint-dot.active { background: #b8a5d4; }
+        .pause-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .pause-modal.active { display: flex; }
+        .pause-content { background: white; padding: 40px; border-radius: 20px; text-align: center; max-width: 400px; }
+        .pause-content h2 { margin-bottom: 15px; }
+        .pause-content p { margin-bottom: 25px; color: var(--text-medium); }
+        .pause-close { background: var(--accent-pink); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-family: Verdana; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <!-- Kommentar för förälder/pedagog:
+         Uppgift 11: Introducerar procent som "hundradel".
+         Visuellt 100-rutnät för att visa procent.
+    -->
+
+    <div class="page-container">
+        <nav class="sidebar">
+            <div class="sidebar-title">Innehåll</div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="index.html" class="nav-link">← Tillbaka</a></li>
+                <li class="nav-item"><a href="uppgift-09-forlanga-brak.html" class="nav-link completed">9. Förlänga bråk</a></li>
+                <li class="nav-item"><a href="uppgift-10-forkorta-brak.html" class="nav-link completed">10. Förkorta bråk</a></li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link current">11. Vad är procent?<span class="you-are-here">← Du är här</span></a>
+                </li>
+                <li class="nav-item"><a href="uppgift-12-procent-brak.html" class="nav-link">12. Procent och bråk</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <div class="top-bar">
+                <a href="index.html" class="back-link">← Alla uppgifter</a>
+                <span class="progress-mini">Uppgift 11 av 55</span>
+            </div>
+
+            <div class="content-card">
+                <h1 class="page-title">Vad är procent?</h1>
+                <p class="page-subtitle">Procent är överallt - rabatter, betyg, väder!</p>
+
+                <div class="start-indicator">▶ BÖRJA HÄR</div>
+
+                <div class="explanation">
+                    <p class="explanation-text">
+                        <span class="highlight-concept">Procent</span> betyder <strong>"hundradel"</strong>.
+                        <br><br>
+                        <strong>50%</strong> = 50 av 100 = hälften
+                        <br>
+                        <strong>25%</strong> = 25 av 100 = en fjärdedel
+                    </p>
+                </div>
+
+                <div class="visual-example">
+                    <div class="percent-grid">
+                        <!-- 50 fyllda + 50 tomma = 50% -->
+                        <div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div>
+                        <div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div>
+                        <div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div>
+                        <div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div>
+                        <div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div>
+                        <div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div>
+                        <div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div>
+                        <div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div>
+                        <div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div>
+                        <div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div><div class="grid-cell filled"></div>
+                        <div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div>
+                        <div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div>
+                        <div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div>
+                        <div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div>
+                        <div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div>
+                        <div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div>
+                        <div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div>
+                        <div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div>
+                        <div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div>
+                        <div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div><div class="grid-cell empty"></div>
+                    </div>
+                    <div class="visual-label">50 av 100 = 50%</div>
+                </div>
+
+                <p class="encouragement">
+                    Tänk på REA-skyltar: "50% rabatt" betyder halva priset! 🛍️
+                </p>
+
+                <div class="task-section">
+                    <h2 class="task-title">✏️ Prova själv!</h2>
+                    <p class="task-instruction">
+                        Om du svarar rätt på 75 av 100 frågor, hur många procent är det?
+                    </p>
+
+                    <div class="task-problem">75 av 100 = ? %</div>
+
+                    <div class="answer-options">
+                        <button class="option-btn" onclick="checkOption(this, false)">50%</button>
+                        <button class="option-btn" onclick="checkOption(this, true)">75%</button>
+                        <button class="option-btn" onclick="checkOption(this, false)">100%</button>
+                    </div>
+
+                    <div class="feedback" id="feedback"></div>
+
+                    <button class="hint-button" onclick="showNextHint()">💡 Jag behöver en ledtråd</button>
+
+                    <div class="hint-section" id="hint-section">
+                        <div class="hint-header">
+                            <span class="hint-icon">💡</span>
+                            <span class="hint-title">Ledtrådar</span>
+                        </div>
+                        <div class="hint-step" id="hint-1">
+                            <div class="hint-step-number">STEG 1</div>
+                            <p class="hint-step-text">
+                                Procent betyder "av hundra".
+                                <br>Om du har 75 av 100, är det samma som 75 procent!
+                            </p>
+                        </div>
+                        <div class="hint-progress">
+                            <span class="hint-dot" id="dot-1"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="success-section" id="success">
+                    <p class="success-message">🎉 Helt rätt! 75 av 100 = 75%. Du förstår procent!</p>
+                    <a href="uppgift-12-procent-brak.html" class="next-btn">Nästa uppgift →</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <button class="pause-button" onclick="showPause()">🧘 Paus</button>
+
+    <div class="pause-modal" id="pause-modal">
+        <div class="pause-content">
+            <h2>Paus! 🌟</h2>
+            <p>Nu börjar procent! Ta en paus.</p>
+            <button class="pause-close" onclick="hidePause()">Jag är redo igen →</button>
+        </div>
+    </div>
+
+    <script>
+        let answered = false;
+        let currentHint = 0;
+        const totalHints = 1;
+
+        function showNextHint() {
+            const hintSection = document.getElementById('hint-section');
+            const hintButton = document.querySelector('.hint-button');
+            if (!hintSection.classList.contains('show')) hintSection.classList.add('show');
+            currentHint++;
+            if (currentHint <= totalHints) {
+                document.getElementById('hint-' + currentHint).classList.add('show');
+                document.getElementById('dot-' + currentHint).classList.add('active');
+                if (currentHint >= totalHints) {
+                    hintButton.innerHTML = '💡 Alla ledtrådar visade';
+                    hintButton.disabled = true;
+                }
+            }
+        }
+
+        function checkOption(element, isCorrect) {
+            if (answered) return;
+            const feedback = document.getElementById('feedback');
+            if (isCorrect) {
+                answered = true;
+                element.classList.add('correct');
+                feedback.textContent = 'Precis! 75 av 100 = 75%. Procent är enkelt! ⭐';
+                feedback.className = 'feedback show correct';
+                setTimeout(() => {
+                    document.getElementById('success').classList.add('show');
+                    markCompleted(11);
+                }, 1000);
+            } else {
+                element.classList.add('incorrect');
+                feedback.textContent = 'Inte riktigt! Procent = hur många av 100. 💪';
+                feedback.className = 'feedback show incorrect';
+                setTimeout(() => element.classList.remove('incorrect'), 1500);
+            }
+        }
+
+        function markCompleted(taskNumber) {
+            let completed = [];
+            try {
+                const data = localStorage.getItem('esther-completed-tasks');
+                completed = data ? JSON.parse(data) : [];
+            } catch(e) { completed = []; }
+
+            if (!completed.includes(taskNumber)) {
+                completed.push(taskNumber);
+                localStorage.setItem('esther-completed-tasks', JSON.stringify(completed));
+            }
+
+            let skipped = [];
+            try {
+                const data = localStorage.getItem('esther-skipped-tasks');
+                skipped = data ? JSON.parse(data) : [];
+            } catch(e) { skipped = []; }
+
+            const idx = skipped.indexOf(taskNumber);
+            if (idx > -1) {
+                skipped.splice(idx, 1);
+                localStorage.setItem('esther-skipped-tasks', JSON.stringify(skipped));
+            }
+        }
+
+        window.addEventListener('beforeunload', function() {
+            const success = document.getElementById('success');
+            if (success && !success.classList.contains('show')) {
+                let completed = [];
+                try {
+                    const data = localStorage.getItem('esther-completed-tasks');
+                    completed = data ? JSON.parse(data) : [];
+                } catch(e) { completed = []; }
+
+                if (!completed.includes(11)) {
+                    let skipped = [];
+                    try {
+                        const data = localStorage.getItem('esther-skipped-tasks');
+                        skipped = data ? JSON.parse(data) : [];
+                    } catch(e) { skipped = []; }
+
+                    if (!skipped.includes(11)) {
+                        skipped.push(11);
+                        localStorage.setItem('esther-skipped-tasks', JSON.stringify(skipped));
+                    }
+                }
+            }
+        });
+
+        function showPause() { document.getElementById('pause-modal').classList.add('active'); }
+        function hidePause() { document.getElementById('pause-modal').classList.remove('active'); }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') hidePause(); });
+    </script>
+</body>
+</html>
