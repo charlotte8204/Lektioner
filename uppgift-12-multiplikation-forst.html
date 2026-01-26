@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uppgift 12: Multiplikation först - Esthers Matte</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Verdana, Geneva, sans-serif; font-size: 18px; line-height: 1.7; background: linear-gradient(135deg, #fdf6f9 0%, #f0f4f8 100%); min-height: 100vh; color: #4a4a4a; }
+        :root { --pastel-pink: #f8e1e8; --pastel-blue: #e1ecf8; --pastel-green: #e1f8e8; --pastel-yellow: #f8f4e1; --text-dark: #4a4a4a; --text-medium: #6a6a6a; --accent-pink: #d4a5b5; --success-green: #98d4a5; --white: #ffffff; }
+        .page-container { display: flex; min-height: 100vh; }
+        .sidebar { width: 220px; background: var(--white); padding: 25px 20px; border-right: 1px solid #eee; position: fixed; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
+        .sidebar-title { font-size: 14px; color: var(--text-medium); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-list { list-style: none; }
+        .nav-item { margin-bottom: 8px; }
+        .nav-link { display: block; padding: 10px 12px; text-decoration: none; color: var(--text-medium); border-radius: 8px; font-size: 14px; transition: all 0.2s; }
+        .nav-link:hover { background: var(--pastel-blue); }
+        .nav-link.current { background: var(--pastel-pink); color: var(--text-dark); font-weight: 600; }
+        .nav-link.completed::before { content: "✓ "; color: var(--success-green); }
+        .you-are-here { font-size: 12px; color: var(--accent-pink); margin-left: 5px; }
+        .main-content { flex: 1; margin-left: 220px; padding: 30px 50px; max-width: 800px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .back-link { color: var(--accent-pink); text-decoration: none; font-size: 15px; }
+        .progress-mini { font-size: 14px; color: var(--text-medium); background: var(--pastel-blue); padding: 8px 15px; border-radius: 20px; }
+        .content-card { background: var(--white); border-radius: 20px; padding: 35px 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .page-title { font-size: 24px; color: var(--text-dark); margin-bottom: 8px; }
+        .page-subtitle { font-size: 15px; color: var(--text-medium); margin-bottom: 25px; }
+        .start-indicator { display: inline-block; background: var(--pastel-green); color: #5a9a6a; padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-bottom: 20px; }
+        .explanation { background: var(--pastel-yellow); border-radius: 15px; padding: 25px; margin-bottom: 25px; }
+        .explanation-text { font-size: 18px; line-height: 1.8; }
+        .highlight-concept { background: #f0e8c8; padding: 2px 8px; border-radius: 5px; font-weight: 600; }
+        .visual-example { text-align: center; margin: 25px 0; }
+        .shopping-example { background: var(--pastel-pink); padding: 25px; border-radius: 15px; display: inline-block; }
+        .shopping-items { display: flex; gap: 20px; justify-content: center; margin-bottom: 15px; }
+        .shop-item { background: white; padding: 15px; border-radius: 12px; text-align: center; }
+        .shop-emoji { font-size: 32px; margin-bottom: 8px; }
+        .shop-label { font-size: 14px; color: var(--text-medium); }
+        .shop-price { font-size: 16px; font-weight: 600; color: var(--accent-pink); }
+        .visual-note { font-size: 14px; color: var(--text-medium); font-style: italic; margin-top: 15px; }
+        .encouragement { text-align: center; font-size: 16px; color: var(--text-medium); font-style: italic; margin: 20px 0; }
+        .task-section { background: var(--pastel-pink); border-radius: 15px; padding: 25px; margin-top: 25px; }
+        .task-title { font-size: 18px; font-weight: 600; color: var(--text-dark); margin-bottom: 15px; }
+        .task-instruction { font-size: 16px; color: var(--text-medium); margin-bottom: 20px; }
+        .task-question { font-size: 18px; color: var(--text-dark); margin-bottom: 20px; }
+        .input-group { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; margin-bottom: 15px; }
+        .input-field { padding: 12px 20px; font-size: 18px; font-family: Verdana; border: 3px solid #ddd; border-radius: 12px; width: 100px; text-align: center; }
+        .input-field:focus { outline: none; border-color: var(--accent-pink); }
+        .input-label { font-size: 16px; color: var(--text-dark); }
+        .submit-btn { background: var(--accent-pink); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-family: Verdana; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        .submit-btn:hover { background: #c49aaa; }
+        .feedback { margin-top: 20px; padding: 15px 20px; border-radius: 10px; display: none; }
+        .feedback.show { display: block; }
+        .feedback.correct { background: var(--pastel-green); color: #4a7a5a; }
+        .feedback.incorrect { background: #f8e8e8; color: #7a4a4a; }
+        .success-section { display: none; text-align: center; margin-top: 25px; padding: 25px; background: var(--pastel-green); border-radius: 15px; }
+        .success-section.show { display: block; }
+        .success-message { font-size: 20px; color: #4a7a5a; margin-bottom: 20px; }
+        .next-btn { background: var(--success-green); color: white; border: none; padding: 15px 35px; border-radius: 30px; font-family: Verdana; font-size: 18px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .next-btn:hover { background: #88c498; }
+        .pause-button { position: fixed; bottom: 30px; right: 30px; background: var(--pastel-green); border: none; padding: 12px 20px; border-radius: 25px; font-family: Verdana; font-size: 14px; color: var(--text-dark); cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .hint-button { background: #b8a5d4; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-family: Verdana; font-size: 14px; cursor: pointer; margin-top: 15px; }
+        .hint-button:disabled { background: #ccc; cursor: not-allowed; }
+        .hint-section { background: linear-gradient(135deg, #efe1f8 0%, #e8d4f4 100%); border-radius: 15px; padding: 20px 25px; margin-top: 20px; border-left: 4px solid #b8a5d4; display: none; }
+        .hint-section.show { display: block; }
+        .hint-step { background: white; border-radius: 10px; padding: 15px; margin-bottom: 10px; border-left: 3px solid #b8a5d4; display: none; }
+        .hint-step.show { display: block; }
+        .hint-step-number { font-size: 12px; color: #9a8aaa; margin-bottom: 5px; font-weight: 600; }
+        .hint-step-text { font-size: 16px; color: var(--text-dark); }
+        .hint-progress { display: flex; gap: 8px; margin-top: 15px; }
+        .hint-dot { width: 10px; height: 10px; border-radius: 50%; background: #d4c5e4; }
+        .hint-dot.active { background: #b8a5d4; }
+        .skip-section { margin-top: 20px; text-align: center; }
+        .skip-btn { background: transparent; border: 2px solid #ddd; color: var(--text-medium); padding: 10px 20px; border-radius: 20px; font-family: Verdana; font-size: 14px; cursor: pointer; }
+        .skip-btn:hover { border-color: #ffb74d; color: #e65100; }
+        .pause-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .pause-modal.active { display: flex; }
+        .pause-content { background: white; padding: 40px; border-radius: 20px; text-align: center; max-width: 400px; }
+        .pause-content h2 { margin-bottom: 15px; }
+        .pause-content p { margin-bottom: 25px; color: var(--text-medium); }
+        .pause-close { background: var(--accent-pink); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-family: Verdana; font-size: 16px; cursor: pointer; }
+
+        /* === STICKY TIPS SIDEBAR === */
+        .tips-sidebar {
+            margin-top: auto;
+            padding-top: 20px;
+        }
+
+        .tips-sticky-note {
+            background: #fffacd;
+            border-radius: 5px;
+            padding: 18px 15px;
+            box-shadow:
+                3px 3px 10px rgba(0,0,0,0.1),
+                0 0 0 1px rgba(0,0,0,0.05);
+            transform: rotate(-2deg);
+            position: relative;
+        }
+
+        .tips-sticky-note::before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 15px;
+            background: rgba(200, 180, 140, 0.6);
+            border-radius: 2px;
+        }
+
+        .tips-sticky-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #7a6a4a;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tips-sticky-list {
+            list-style: none;
+            font-size: 12px;
+            color: #6a5a3a;
+            line-height: 1.5;
+        }
+
+        .tips-sticky-list li {
+            padding: 4px 0;
+            padding-left: 18px;
+            position: relative;
+        }
+
+        .tips-sticky-list li::before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+            font-size: 10px;
+        }
+
+        .nav-list {
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <nav class="sidebar">
+            <div class="sidebar-title">Innehåll</div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="index.html" class="nav-link">← Tillbaka</a></li>
+                <li class="nav-item"><a href="uppgift-10-kombinatorik-problem.html" class="nav-link" id="nav-10">10. Kombinatorik-problem</a></li>
+                <li class="nav-item"><a href="uppgift-11-prioriteringsregler.html" class="nav-link" id="nav-11">11. Prioriteringsregler</a></li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link current">12. Multiplikation först<span class="you-are-here">← Du är här</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="uppgift-13-parenteser.html" class="nav-link" id="nav-13">13. Parenteser</a>
+                </li>
+            </ul>
+            <!-- STICKY TIPS -->
+            <aside class="tips-sidebar">
+                <div class="tips-sticky-note">
+                    <div class="tips-sticky-title">📝 Tips till Esther</div>
+                    <ul class="tips-sticky-list">
+                        <li>Ha papper och penna bredvid dig</li>
+                        <li>Läs instruktionerna klart först</li>
+                        <li>Ta paus var 20:e minut</li>
+                        <li>Det är okej att göra fel!</li>
+                    </ul>
+                </div>
+            </aside>
+        </nav>
+
+        <main class="main-content">
+            <div class="top-bar">
+                <a href="index.html" class="back-link">← Alla uppgifter</a>
+                <span class="progress-mini">Uppgift 12 av 40</span>
+            </div>
+
+            <div class="content-card">
+                <h1 class="page-title">Multiplikation först</h1>
+                <p class="page-subtitle">Sminkköp med prioriteringsregler!</p>
+
+                <div class="start-indicator">▶ BÖRJA HÄR</div>
+
+                <div class="explanation">
+                    <p class="explanation-text">
+                        Du köper smink! Räkna vad det kostar totalt.
+                        <br><br>
+                        Kom ihåg: <span class="highlight-concept">Multiplikation före addition</span>!
+                    </p>
+                </div>
+
+                <div class="visual-example">
+                    <div class="shopping-example">
+                        <p style="font-weight: 600; margin-bottom: 15px;">Din varukorg:</p>
+                        <div class="shopping-items">
+                            <div class="shop-item">
+                                <div class="shop-emoji">💄</div>
+                                <div class="shop-label">3 läppglans</div>
+                                <div class="shop-price">25 kr/st</div>
+                            </div>
+                            <div class="shop-item">
+                                <div class="shop-emoji">💅</div>
+                                <div class="shop-label">1 nagellack</div>
+                                <div class="shop-price">45 kr</div>
+                            </div>
+                        </div>
+                        <div class="visual-note">Uttryck: 3 × 25 + 45</div>
+                    </div>
+                </div>
+
+                <p class="encouragement">
+                    Räkna multiplikationen först!
+                </p>
+
+                <div class="task-section">
+                    <h2 class="task-title">✏️ Prova själv!</h2>
+                    <p class="task-instruction">
+                        Ta fram papper och penna. Räkna: 4 × 30 + 55 = ?
+                    </p>
+
+                    <p class="task-question">
+                        Hur mycket kostar <strong>4 läppglans à 30 kr</strong> och <strong>1 nagellack à 55 kr</strong> totalt?
+                    </p>
+
+                    <div class="input-group">
+                        <label class="input-label">Svar:</label>
+                        <input type="number" class="input-field" id="answer-input" placeholder="?">
+                        <span class="input-label">kr</span>
+                    </div>
+
+                    <button class="submit-btn" onclick="checkAnswer()">Kolla svaret</button>
+
+                    <div class="feedback" id="feedback"></div>
+
+                    <button class="hint-button" onclick="showNextHint()">💡 Jag behöver en ledtråd</button>
+
+                    <div class="hint-section" id="hint-section">
+                        <p style="font-style: italic; color: #7a6a8a; margin-bottom: 15px;">Bra att du frågar!</p>
+                        <div class="hint-step" id="hint-1">
+                            <div class="hint-step-number">STEG 1</div>
+                            <p class="hint-step-text">Multiplikation först: 4 × 30 = 120 kr</p>
+                        </div>
+                        <div class="hint-step" id="hint-2">
+                            <div class="hint-step-number">STEG 2</div>
+                            <p class="hint-step-text">Sedan addition: 120 + 55 = ?</p>
+                        </div>
+                        <div class="hint-step" id="hint-3">
+                            <div class="hint-step-number">STEG 3</div>
+                            <p class="hint-step-text">Nu har du 120 + 55. Vad blir summan?</p>
+                        </div>
+                        <div class="hint-progress">
+                            <span class="hint-dot" id="dot-1"></span>
+                            <span class="hint-dot" id="dot-2"></span>
+                            <span class="hint-dot" id="dot-3"></span>
+                        </div>
+                    </div>
+
+                    <div class="skip-section">
+                        <button class="skip-btn" onclick="skipTask()">Hoppa över →</button>
+                    </div>
+                </div>
+
+                <div class="success-section" id="success">
+                    <p class="success-message">🎉 Helt rätt! 4 × 30 = 120, sedan 120 + 55 = 175 kr!</p>
+                    <a href="uppgift-13-parenteser.html" class="next-btn">Nästa uppgift →</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <button class="pause-button" id="pause-btn" onclick="showPause()">🧘 Jag behöver en paus</button>
+
+    <div class="pause-modal" id="pause-modal">
+        <div class="pause-content">
+            <h2 id="pause-title">Paus! 🌟</h2>
+            <p id="pause-message">Bra att du tar en paus!</p>
+            <button class="pause-close" onclick="hidePause()">Jag är redo igen →</button>
+        </div>
+    </div>
+
+    <script>
+        const TASK_NUMBER = 12;
+        const STORAGE_PREFIX = 'esther-kap3';
+        const pageStartTime = Date.now();
+        let hintTimes = [], userAnswers = [], attempts = 0, currentHint = 0;
+        const totalHints = 3;
+        const CORRECT_ANSWER = 175;
+
+        function saveTracking(wasCompleted, wasSkipped) {
+            try {
+                let trackingData = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-tracking') || '[]');
+                const existingIndex = trackingData.findIndex(t => t.task === TASK_NUMBER);
+                const data = { task: TASK_NUMBER, timeOnPage: Date.now() - pageStartTime, hintsUsed: currentHint, hintTimes, wasSkipped, attempts, answers: userAnswers, completedAt: wasCompleted ? new Date().toISOString() : null, timestamp: new Date().toISOString() };
+                if (existingIndex > -1) { trackingData[existingIndex] = data; } else { trackingData.push(data); }
+                localStorage.setItem(STORAGE_PREFIX + '-tracking', JSON.stringify(trackingData));
+            } catch(e) {}
+        }
+
+        function showNextHint() {
+            hintTimes.push(Date.now() - pageStartTime);
+            const hintSection = document.getElementById('hint-section');
+            const hintButton = document.querySelector('.hint-button');
+            if (!hintSection.classList.contains('show')) { hintSection.classList.add('show'); }
+            currentHint++;
+            if (currentHint <= totalHints) {
+                document.getElementById('hint-' + currentHint).classList.add('show');
+                document.getElementById('dot-' + currentHint).classList.add('active');
+                if (currentHint < totalHints) { hintButton.innerHTML = '💡 Nästa ledtråd (' + currentHint + '/' + totalHints + ')'; }
+                else { hintButton.innerHTML = '💡 Alla ledtrådar visade'; hintButton.disabled = true; }
+            }
+        }
+
+        function checkAnswer() {
+            const input = document.getElementById('answer-input');
+            const feedback = document.getElementById('feedback');
+            const success = document.getElementById('success');
+            const userAnswer = parseInt(input.value);
+            userAnswers.push(userAnswer);
+            attempts++;
+
+            if (userAnswer === CORRECT_ANSWER) {
+                input.style.borderColor = 'var(--success-green)';
+                feedback.textContent = 'Perfekt! 4 × 30 + 55 = 175 kr!';
+                feedback.className = 'feedback show correct';
+                setTimeout(() => { success.classList.add('show'); markCompleted(TASK_NUMBER); saveTracking(true, false); }, 1000);
+            } else {
+                input.style.borderColor = '#e8a5a5';
+                if (attempts === 1) { feedback.textContent = 'Inte riktigt. Räkna multiplikationen först: 4 × 30 = ?'; }
+                else if (attempts === 2) { feedback.textContent = '4 × 30 = 120. Sedan: 120 + 55 = ?'; }
+                else { feedback.textContent = 'Svaret är 175 kr (120 + 55 = 175).'; }
+                feedback.className = 'feedback show incorrect';
+                setTimeout(() => { input.style.borderColor = '#ddd'; }, 1500);
+            }
+        }
+
+        function skipTask() { markSkipped(TASK_NUMBER); saveTracking(false, true); window.location.href = 'uppgift-13-parenteser.html'; }
+
+        function markCompleted(taskNumber) {
+            let completed = [];
+            try { completed = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-completed-tasks') || '[]'); } catch(e) {}
+            if (!completed.includes(taskNumber)) { completed.push(taskNumber); localStorage.setItem(STORAGE_PREFIX + '-completed-tasks', JSON.stringify(completed)); }
+            let skipped = [];
+            try { skipped = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-skipped-tasks') || '[]'); } catch(e) {}
+            const idx = skipped.indexOf(taskNumber);
+            if (idx > -1) { skipped.splice(idx, 1); localStorage.setItem(STORAGE_PREFIX + '-skipped-tasks', JSON.stringify(skipped)); }
+        }
+
+        function markSkipped(taskNumber) {
+            let completed = [];
+            try { completed = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-completed-tasks') || '[]'); } catch(e) {}
+            if (completed.includes(taskNumber)) return;
+            let skipped = [];
+            try { skipped = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-skipped-tasks') || '[]'); } catch(e) {}
+            if (!skipped.includes(taskNumber)) { skipped.push(taskNumber); localStorage.setItem(STORAGE_PREFIX + '-skipped-tasks', JSON.stringify(skipped)); }
+        }
+
+        (function updateNav() {
+            try {
+                const completed = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-completed-tasks') || '[]');
+                if (completed.includes(10)) document.getElementById('nav-10').classList.add('completed');
+                if (completed.includes(11)) document.getElementById('nav-11').classList.add('completed');
+            } catch(e) {}
+        })();
+
+        window.addEventListener('beforeunload', function() { if (!document.getElementById('success').classList.contains('show')) saveTracking(false, false); });
+        document.getElementById('answer-input').addEventListener('keypress', function(e) { if (e.key === 'Enter') checkAnswer(); });
+
+        const pauseButtons = [
+            { btn: "🧘 Ta en paus", title: "Paus! 🌟", msg: "Bra att du tar en paus! Sitt kvar och slappna av." },
+            { btn: "💪 Sträck på armarna", title: "Sträck ut! 💪", msg: "Sträck armarna högt över huvudet och håll i 5 sekunder!" },
+            { btn: "🙆 Rulla axlarna", title: "Rulla axlarna! 🙆", msg: "Rulla axlarna bakåt 5 gånger, sedan framåt 5 gånger." },
+            { btn: "👀 Vila ögonen", title: "Vila ögonen! 👀", msg: "Titta bort från skärmen och fokusera på något långt bort i 20 sekunder." },
+            { btn: "🌬️ Andas djupt", title: "Andas! 🌬️", msg: "Ta 3 djupa andetag - in genom näsan, ut genom munnen." },
+            { btn: "🤸 Vrid på kroppen", title: "Vrid! 🤸", msg: "Sitt kvar och vrid försiktigt överkroppen åt höger, sedan åt vänster." },
+            { btn: "✋ Skaka händerna", title: "Skaka loss! ✋", msg: "Skaka händerna snabbt i 10 sekunder för att få igång blodet!" },
+            { btn: "😊 Le stort", title: "Le! 😊", msg: "Le så stort du kan och håll i 5 sekunder. Det gör dig gladare!" },
+            { btn: "🦒 Sträck på nacken", title: "Sträck nacken! 🦒", msg: "Luta huvudet försiktigt åt höger, håll i 5 sekunder, sedan åt vänster." },
+            { btn: "👊 Knyt händerna", title: "Knyt och släpp! 👊", msg: "Knyt händerna hårt, håll i 3 sekunder, släpp. Upprepa 3 gånger." }
+        ];
+
+        function getRandomPause() {
+            return pauseButtons[Math.floor(Math.random() * pauseButtons.length)];
+        }
+
+        function showPause() {
+            const pause = getRandomPause();
+            document.getElementById('pause-title').textContent = pause.title;
+            document.getElementById('pause-message').textContent = pause.msg;
+            document.getElementById('pause-modal').classList.add('active');
+        }
+
+        function hidePause() {
+            document.getElementById('pause-modal').classList.remove('active');
+        }
+
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') hidePause(); });
+    </script>
+</body>
+</html>

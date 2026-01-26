@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bråk och Procent - Esthers Mattesidor</title>
+    <title>Kapitel 3: Samband, uttryck och ekvationer - Esthers Mattesidor</title>
     <style>
         /* === GRUNDLÄGGANDE STYLING === */
         * {
@@ -37,10 +37,85 @@
         }
 
         /* === LAYOUT === */
+        .page-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
         .container {
             max-width: 900px;
             margin: 0 auto;
             padding: 30px 40px;
+            flex: 1;
+        }
+
+        /* === STICKY TIPS SIDEBAR === */
+        .tips-sidebar {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 200px;
+            z-index: 100;
+        }
+
+        .tips-sticky-note {
+            background: #fffacd;
+            border-radius: 5px;
+            padding: 18px 15px;
+            box-shadow:
+                3px 3px 10px rgba(0,0,0,0.1),
+                0 0 0 1px rgba(0,0,0,0.05);
+            transform: rotate(-2deg);
+            position: relative;
+        }
+
+        .tips-sticky-note::before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 15px;
+            background: rgba(200, 180, 140, 0.6);
+            border-radius: 2px;
+        }
+
+        .tips-sticky-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #7a6a4a;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tips-sticky-list {
+            list-style: none;
+            font-size: 12px;
+            color: #6a5a3a;
+            line-height: 1.5;
+        }
+
+        .tips-sticky-list li {
+            padding: 4px 0;
+            padding-left: 18px;
+            position: relative;
+        }
+
+        .tips-sticky-list li::before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+            font-size: 10px;
+        }
+
+        @media (max-width: 1200px) {
+            .tips-sidebar {
+                display: none;
+            }
         }
 
         /* === HEADER MED VÄLKOMST === */
@@ -286,38 +361,6 @@
             color: white;
         }
 
-        /* === TIPS-RUTA === */
-        .tips-section {
-            background: var(--pastel-purple);
-            border-radius: 15px;
-            padding: 20px 25px;
-            margin-top: 30px;
-        }
-
-        .tips-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 10px;
-        }
-
-        .tips-list {
-            list-style: none;
-            font-size: 15px;
-            color: var(--text-medium);
-        }
-
-        .tips-list li {
-            padding: 5px 0;
-            padding-left: 25px;
-            position: relative;
-        }
-
-        .tips-list li::before {
-            content: "💡";
-            position: absolute;
-            left: 0;
-        }
 
         /* === PAUS-KNAPP === */
         .pause-button {
@@ -398,10 +441,23 @@
     </style>
 </head>
 <body>
+    <!-- STICKY TIPS SIDEBAR -->
+    <aside class="tips-sidebar">
+        <div class="tips-sticky-note">
+            <div class="tips-sticky-title">📝 Tips till Esther</div>
+            <ul class="tips-sticky-list">
+                <li>Ha papper och penna bredvid dig</li>
+                <li>Läs instruktionerna klart först</li>
+                <li>Ta paus var 20:e minut</li>
+                <li>Det är okej att göra fel!</li>
+            </ul>
+        </div>
+    </aside>
+
     <!-- Kommentar för förälder/pedagog:
-         Detta är startsidan för Esthers mattemodul om bråk och procent.
+         Detta är startsidan för Esthers mattemodul om samband, uttryck och ekvationer (Kapitel 3).
          Progress sparas automatiskt i webbläsaren (localStorage).
-         Uppskattad tid: ca 3-4 sessioner à 20 minuter.
+         Uppskattad tid: ca 4-5 sessioner à 20 minuter.
     -->
 
     <div class="container">
@@ -409,7 +465,7 @@
         <header class="welcome-header">
             <h1>Hej <span class="welcome-name">Esther</span>! 👋</h1>
             <p class="welcome-message">
-                Här ska vi utforska bråk och procent tillsammans.
+                Här ska vi utforska samband, uttryck och ekvationer tillsammans.
                 Ta det lugnt, ett steg i taget. Du klarar det här!
             </p>
         </header>
@@ -418,14 +474,17 @@
         <section class="progress-section">
             <div class="progress-header">
                 <span class="progress-title">Din framgång</span>
-                <span class="progress-count" id="progress-text">0 av 55 klara</span>
+                <span class="progress-count" id="progress-text">0 av 40 klara</span>
             </div>
             <div class="progress-bar-container">
                 <div class="progress-bar" id="progress-bar"></div>
             </div>
             <div class="progress-info">
                 <span>Du har precis börjat!</span>
-                <span id="time-estimate">Ca 3 sessioner kvar</span>
+                <span id="time-estimate">Ca 4 sessioner kvar</span>
+            </div>
+            <div style="margin-top: 15px; text-align: center;">
+                <a href="kap3-summary.html" style="color: var(--accent-pink); font-size: 14px; text-decoration: none;">📊 Visa detaljerad statistik →</a>
             </div>
         </section>
 
@@ -433,9 +492,9 @@
         <section class="goal-section">
             <div class="goal-title">🎯 Varför lär vi oss detta?</div>
             <p class="goal-text">
-                Bråk och procent används överallt! När du delar en pizza,
-                räknar ut rabatter på smink, eller kollar hur snabb en skidåkare är.
-                När du kan detta blir mycket enklare att förstå!
+                Samband och mönster finns överallt! När du beräknar rabatter på smink,
+                jämför priser, eller räknar ut hur snabbt du åker i slalombacken.
+                Med ekvationer kan du lösa knepiga problem steg för steg!
             </p>
         </section>
 
@@ -443,52 +502,52 @@
         <section class="tasks-section">
             <h2 class="tasks-title">📚 Alla uppgifter</h2>
 
-            <!-- GRUPP 1: Grunderna -->
+            <!-- GRUPP 1: Proportionalitet -->
             <div class="task-group">
-                <h3 class="task-group-title">Del 1: Vad är bråk?</h3>
+                <h3 class="task-group-title">Del 1: Proportionalitet</h3>
                 <ul class="task-list">
                     <li class="task-item">
-                        <a href="uppgift-01-vad-ar-brak.html" class="task-link current" id="task-1">
+                        <a href="uppgift-01-koordinatsystem.html" class="task-link current" id="task-1">
                             <div class="task-number"><span>1</span></div>
                             <div class="task-content">
-                                <div class="task-name">Vad är ett bråk?</div>
+                                <div class="task-name">Vad är ett koordinatsystem?</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                             <span class="task-status">Börja här →</span>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-02-delar-av-en-hel.html" class="task-link" id="task-2">
+                        <a href="uppgift-02-lasa-koordinater.html" class="task-link" id="task-2">
                             <div class="task-number"><span>2</span></div>
                             <div class="task-content">
-                                <div class="task-name">Delar av en hel</div>
+                                <div class="task-name">Läsa av koordinater</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-03-taljare-namnare.html" class="task-link" id="task-3">
+                        <a href="uppgift-03-vad-ar-proportionalitet.html" class="task-link" id="task-3">
                             <div class="task-number"><span>3</span></div>
                             <div class="task-content">
-                                <div class="task-name">Täljare och nämnare</div>
+                                <div class="task-name">Vad är proportionalitet?</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-04-halva-tredjedel.html" class="task-link" id="task-4">
+                        <a href="uppgift-04-proportionella-samband.html" class="task-link" id="task-4">
                             <div class="task-number"><span>4</span></div>
                             <div class="task-content">
-                                <div class="task-name">Halva, tredjedel, fjärdedel</div>
+                                <div class="task-name">Proportionella samband</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-05-visa-brak-med-bild.html" class="task-link" id="task-5">
+                        <a href="uppgift-05-rita-graf.html" class="task-link" id="task-5">
                             <div class="task-number"><span>5</span></div>
                             <div class="task-content">
-                                <div class="task-name">Visa bråk med bild</div>
+                                <div class="task-name">Känna igen proportionalitet</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
@@ -496,51 +555,51 @@
                 </ul>
             </div>
 
-            <!-- GRUPP 2: Räkna med bråk -->
+            <!-- GRUPP 2: Kombinatorik -->
             <div class="task-group">
-                <h3 class="task-group-title">Del 2: Räkna med bråk</h3>
+                <h3 class="task-group-title">Del 2: Kombinatorik</h3>
                 <ul class="task-list">
                     <li class="task-item">
-                        <a href="uppgift-06-lagga-ihop-brak.html" class="task-link" id="task-6">
+                        <a href="uppgift-06-kombinera-klader.html" class="task-link" id="task-6">
                             <div class="task-number"><span>6</span></div>
                             <div class="task-content">
-                                <div class="task-name">Lägga ihop bråk</div>
+                                <div class="task-name">Kombinera kläder</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-07-dra-bort-brak.html" class="task-link" id="task-7">
+                        <a href="uppgift-07-traddiagram.html" class="task-link" id="task-7">
                             <div class="task-number"><span>7</span></div>
                             <div class="task-content">
-                                <div class="task-name">Dra bort bråk</div>
+                                <div class="task-name">Träddiagram</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-08-blandad-form.html" class="task-link" id="task-8">
+                        <a href="uppgift-08-rakna-kombinationer.html" class="task-link" id="task-8">
                             <div class="task-number"><span>8</span></div>
                             <div class="task-content">
-                                <div class="task-name">Blandad form</div>
+                                <div class="task-name">Räkna kombinationer</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-09-forlanga-brak.html" class="task-link" id="task-9">
+                        <a href="uppgift-09-bilda-tal.html" class="task-link" id="task-9">
                             <div class="task-number"><span>9</span></div>
                             <div class="task-content">
-                                <div class="task-name">Förlänga bråk</div>
+                                <div class="task-name">Bilda tal</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-10-forkorta-brak.html" class="task-link" id="task-10">
+                        <a href="uppgift-10-kombinatorik-problem.html" class="task-link" id="task-10">
                             <div class="task-number"><span>10</span></div>
                             <div class="task-content">
-                                <div class="task-name">Förkorta bråk</div>
+                                <div class="task-name">Kombinatorik-problem</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
@@ -548,51 +607,51 @@
                 </ul>
             </div>
 
-            <!-- GRUPP 3: Procent -->
+            <!-- GRUPP 3: Numeriska uttryck -->
             <div class="task-group">
-                <h3 class="task-group-title">Del 3: Vad är procent?</h3>
+                <h3 class="task-group-title">Del 3: Numeriska uttryck</h3>
                 <ul class="task-list">
                     <li class="task-item">
-                        <a href="uppgift-11-vad-ar-procent.html" class="task-link" id="task-11">
+                        <a href="uppgift-11-prioriteringsregler.html" class="task-link" id="task-11">
                             <div class="task-number"><span>11</span></div>
                             <div class="task-content">
-                                <div class="task-name">Vad är procent?</div>
+                                <div class="task-name">Prioriteringsregler</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-12-procent-brak.html" class="task-link" id="task-12">
+                        <a href="uppgift-12-multiplikation-forst.html" class="task-link" id="task-12">
                             <div class="task-number"><span>12</span></div>
                             <div class="task-content">
-                                <div class="task-name">Procent och bråk</div>
+                                <div class="task-name">Multiplikation först</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-13-rakna-procent.html" class="task-link" id="task-13">
+                        <a href="uppgift-13-parenteser.html" class="task-link" id="task-13">
                             <div class="task-number"><span>13</span></div>
                             <div class="task-content">
-                                <div class="task-name">Räkna procent</div>
+                                <div class="task-name">Parenteser först</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-14-procent-av-tal.html" class="task-link" id="task-14">
+                        <a href="uppgift-14-teckna-uttryck.html" class="task-link" id="task-14">
                             <div class="task-number"><span>14</span></div>
                             <div class="task-content">
-                                <div class="task-name">Procent av ett tal</div>
+                                <div class="task-name">Teckna uttryck</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-15-hitta-procenten.html" class="task-link" id="task-15">
+                        <a href="uppgift-15-rakna-uttryck.html" class="task-link" id="task-15">
                             <div class="task-number"><span>15</span></div>
                             <div class="task-content">
-                                <div class="task-name">Hitta procenten</div>
+                                <div class="task-name">Räkna ut uttryck</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
@@ -600,51 +659,51 @@
                 </ul>
             </div>
 
-            <!-- GRUPP 4: Decimalform -->
+            <!-- GRUPP 4: Algebraiska uttryck -->
             <div class="task-group">
-                <h3 class="task-group-title">Del 4: Bråk och decimal</h3>
+                <h3 class="task-group-title">Del 4: Algebraiska uttryck</h3>
                 <ul class="task-list">
                     <li class="task-item">
-                        <a href="uppgift-16-brak-decimal.html" class="task-link" id="task-16">
+                        <a href="uppgift-16-vad-ar-variabel.html" class="task-link" id="task-16">
                             <div class="task-number"><span>16</span></div>
                             <div class="task-content">
-                                <div class="task-name">Bråk och decimal</div>
+                                <div class="task-name">Vad är en variabel?</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-17-halva-decimal.html" class="task-link" id="task-17">
+                        <a href="uppgift-17-teckna-med-x.html" class="task-link" id="task-17">
                             <div class="task-number"><span>17</span></div>
                             <div class="task-content">
-                                <div class="task-name">Halva som decimal</div>
+                                <div class="task-name">Teckna med x</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-18-fjardedel-decimal.html" class="task-link" id="task-18">
+                        <a href="uppgift-18-berakna-varde.html" class="task-link" id="task-18">
                             <div class="task-number"><span>18</span></div>
                             <div class="task-content">
-                                <div class="task-name">Fjärdedel som decimal</div>
+                                <div class="task-name">Beräkna värde</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-19-tiondel-decimal.html" class="task-link" id="task-19">
+                        <a href="uppgift-19-forenkla-uttryck.html" class="task-link" id="task-19">
                             <div class="task-number"><span>19</span></div>
                             <div class="task-content">
-                                <div class="task-name">Tiondel som decimal</div>
+                                <div class="task-name">Förenkla uttryck</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-20-decimal-till-brak.html" class="task-link" id="task-20">
+                        <a href="uppgift-20-flera-variabler.html" class="task-link" id="task-20">
                             <div class="task-number"><span>20</span></div>
                             <div class="task-content">
-                                <div class="task-name">Decimal till bråk</div>
+                                <div class="task-name">Flera variabler</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
@@ -652,51 +711,51 @@
                 </ul>
             </div>
 
-            <!-- GRUPP 5: Jämföra och ordna -->
+            <!-- GRUPP 5: Mönster -->
             <div class="task-group">
-                <h3 class="task-group-title">Del 5: Jämföra och ordna</h3>
+                <h3 class="task-group-title">Del 5: Mönster</h3>
                 <ul class="task-list">
                     <li class="task-item">
-                        <a href="uppgift-21-jamfora-brak.html" class="task-link" id="task-21">
+                        <a href="uppgift-21-geometriska-monster.html" class="task-link" id="task-21">
                             <div class="task-number"><span>21</span></div>
                             <div class="task-content">
-                                <div class="task-name">Jämföra bråk</div>
+                                <div class="task-name">Geometriska mönster</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-22-storsta-braken.html" class="task-link" id="task-22">
+                        <a href="uppgift-22-talfoljder.html" class="task-link" id="task-22">
                             <div class="task-number"><span>22</span></div>
                             <div class="task-content">
-                                <div class="task-name">Största bråket</div>
+                                <div class="task-name">Talföljder</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-23-ordna-brak.html" class="task-link" id="task-23">
+                        <a href="uppgift-23-hitta-monster.html" class="task-link" id="task-23">
                             <div class="task-number"><span>23</span></div>
                             <div class="task-content">
-                                <div class="task-name">Ordna bråk</div>
+                                <div class="task-name">Hitta mönstret</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-24-brak-procent.html" class="task-link" id="task-24">
+                        <a href="uppgift-24-uttryck-monster.html" class="task-link" id="task-24">
                             <div class="task-number"><span>24</span></div>
                             <div class="task-content">
-                                <div class="task-name">Bråk och procent</div>
+                                <div class="task-name">Uttryck för mönster</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-25-allt-ihop.html" class="task-link" id="task-25">
+                        <a href="uppgift-25-rakna-monster.html" class="task-link" id="task-25">
                             <div class="task-number"><span>25</span></div>
                             <div class="task-content">
-                                <div class="task-name">Allt ihop!</div>
+                                <div class="task-name">Räkna med mönster</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
@@ -704,51 +763,51 @@
                 </ul>
             </div>
 
-            <!-- GRUPP 6: Procent och rabatt -->
+            <!-- GRUPP 6: Ekvationer -->
             <div class="task-group">
-                <h3 class="task-group-title">Del 6: Procent och rabatt</h3>
+                <h3 class="task-group-title">Del 6: Ekvationer</h3>
                 <ul class="task-list">
                     <li class="task-item">
-                        <a href="uppgift-26-20-procent.html" class="task-link" id="task-26">
+                        <a href="uppgift-26-vad-ar-ekvation.html" class="task-link" id="task-26">
                             <div class="task-number"><span>26</span></div>
                             <div class="task-content">
-                                <div class="task-name">Räkna 20%</div>
+                                <div class="task-name">Vad är en ekvation?</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-27-25-procent.html" class="task-link" id="task-27">
+                        <a href="uppgift-27-balansmetoden.html" class="task-link" id="task-27">
                             <div class="task-number"><span>27</span></div>
                             <div class="task-content">
-                                <div class="task-name">Räkna 25%</div>
+                                <div class="task-name">Balansmetoden</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-28-rabatt-procent.html" class="task-link" id="task-28">
+                        <a href="uppgift-28-los-enkel-ekvation.html" class="task-link" id="task-28">
                             <div class="task-number"><span>28</span></div>
                             <div class="task-content">
-                                <div class="task-name">Rabatt i procent</div>
+                                <div class="task-name">Lös enkel ekvation</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-29-nytt-pris.html" class="task-link" id="task-29">
+                        <a href="uppgift-29-provning.html" class="task-link" id="task-29">
                             <div class="task-number"><span>29</span></div>
                             <div class="task-content">
-                                <div class="task-name">Nytt pris</div>
+                                <div class="task-name">Prövning</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-30-verkligt-problem.html" class="task-link" id="task-30">
+                        <a href="uppgift-30-ekvation-problem.html" class="task-link" id="task-30">
                             <div class="task-number"><span>30</span></div>
                             <div class="task-content">
-                                <div class="task-name">Verkligt problem</div>
+                                <div class="task-name">Ekvation-problem</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
@@ -756,51 +815,51 @@
                 </ul>
             </div>
 
-            <!-- GRUPP 7: Sannolikhet -->
+            <!-- GRUPP 7: Problemlösning -->
             <div class="task-group">
-                <h3 class="task-group-title">Del 7: Sannolikhet</h3>
+                <h3 class="task-group-title">Del 7: Problemlösning</h3>
                 <ul class="task-list">
                     <li class="task-item">
-                        <a href="uppgift-31-vad-ar-sannolikhet.html" class="task-link" id="task-31">
+                        <a href="uppgift-31-proportionalitet-problem.html" class="task-link" id="task-31">
                             <div class="task-number"><span>31</span></div>
                             <div class="task-content">
-                                <div class="task-name">Vad är sannolikhet?</div>
+                                <div class="task-name">Proportionalitet-problem</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-32-mojliga-utfall.html" class="task-link" id="task-32">
+                        <a href="uppgift-32-kombinatorik-problem2.html" class="task-link" id="task-32">
                             <div class="task-number"><span>32</span></div>
                             <div class="task-content">
-                                <div class="task-name">Möjliga utfall</div>
+                                <div class="task-name">Kombinatorik-problem</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-33-gynnsamma-utfall.html" class="task-link" id="task-33">
+                        <a href="uppgift-33-uttryck-problem.html" class="task-link" id="task-33">
                             <div class="task-number"><span>33</span></div>
                             <div class="task-content">
-                                <div class="task-name">Gynnsamma utfall</div>
+                                <div class="task-name">Uttryck-problem</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-34-rakna-sannolikhet.html" class="task-link" id="task-34">
+                        <a href="uppgift-34-monster-problem.html" class="task-link" id="task-34">
                             <div class="task-number"><span>34</span></div>
                             <div class="task-content">
-                                <div class="task-name">Räkna sannolikhet</div>
+                                <div class="task-name">Mönster-problem</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-35-sannolikhet-procent.html" class="task-link" id="task-35">
+                        <a href="uppgift-35-ekvation-problem2.html" class="task-link" id="task-35">
                             <div class="task-number"><span>35</span></div>
                             <div class="task-content">
-                                <div class="task-name">Sannolikhet i procent</div>
+                                <div class="task-name">Ekvation-problem</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
@@ -808,196 +867,40 @@
                 </ul>
             </div>
 
-            <!-- GRUPP 8: Förlänga och förkorta -->
+            <!-- GRUPP 8: Repetition och avslut -->
             <div class="task-group">
-                <h3 class="task-group-title">Del 8: Förlänga och förkorta</h3>
+                <h3 class="task-group-title">Del 8: Repetition och avslut</h3>
                 <ul class="task-list">
                     <li class="task-item">
-                        <a href="uppgift-36-forlanga-brak.html" class="task-link" id="task-36">
+                        <a href="uppgift-36-repetition-proportionalitet.html" class="task-link" id="task-36">
                             <div class="task-number"><span>36</span></div>
                             <div class="task-content">
-                                <div class="task-name">Förlänga bråk</div>
+                                <div class="task-name">Repetition: Proportionalitet</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-37-forkorta-enklaste.html" class="task-link" id="task-37">
+                        <a href="uppgift-37-repetition-uttryck.html" class="task-link" id="task-37">
                             <div class="task-number"><span>37</span></div>
                             <div class="task-content">
-                                <div class="task-name">Förkorta till enklaste</div>
+                                <div class="task-name">Repetition: Uttryck</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-38-gemensam-namnare.html" class="task-link" id="task-38">
+                        <a href="uppgift-38-repetition-ekvationer.html" class="task-link" id="task-38">
                             <div class="task-number"><span>38</span></div>
                             <div class="task-content">
-                                <div class="task-name">Gemensam nämnare</div>
+                                <div class="task-name">Repetition: Ekvationer</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
                             </div>
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-39-jamfora-brak.html" class="task-link" id="task-39">
+                        <a href="uppgift-39-slutuppgift.html" class="task-link" id="task-39">
                             <div class="task-number"><span>39</span></div>
-                            <div class="task-content">
-                                <div class="task-name">Jämföra bråk</div>
-                                <div class="task-time">⏱️ Ca 30 sekunder</div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="task-item">
-                        <a href="uppgift-40-brak-problem.html" class="task-link" id="task-40">
-                            <div class="task-number"><span>40</span></div>
-                            <div class="task-content">
-                                <div class="task-name">Bråk-problem</div>
-                                <div class="task-time">⏱️ Ca 30 sekunder</div>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- GRUPP 9: Blandad form och räkning -->
-            <div class="task-group">
-                <h3 class="task-group-title">Del 9: Blandad form och räkning</h3>
-                <ul class="task-list">
-                    <li class="task-item">
-                        <a href="uppgift-41-blandad-form.html" class="task-link" id="task-41">
-                            <div class="task-number"><span>41</span></div>
-                            <div class="task-content">
-                                <div class="task-name">Blandad form</div>
-                                <div class="task-time">⏱️ Ca 30 sekunder</div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="task-item">
-                        <a href="uppgift-42-blandad-till-brak.html" class="task-link" id="task-42">
-                            <div class="task-number"><span>42</span></div>
-                            <div class="task-content">
-                                <div class="task-name">Blandad till bråk</div>
-                                <div class="task-time">⏱️ Ca 30 sekunder</div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="task-item">
-                        <a href="uppgift-43-brak-till-blandad.html" class="task-link" id="task-43">
-                            <div class="task-number"><span>43</span></div>
-                            <div class="task-content">
-                                <div class="task-name">Bråk till blandad</div>
-                                <div class="task-time">⏱️ Ca 30 sekunder</div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="task-item">
-                        <a href="uppgift-44-addera-brak.html" class="task-link" id="task-44">
-                            <div class="task-number"><span>44</span></div>
-                            <div class="task-content">
-                                <div class="task-name">Addera bråk</div>
-                                <div class="task-time">⏱️ Ca 30 sekunder</div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="task-item">
-                        <a href="uppgift-45-subtrahera-brak.html" class="task-link" id="task-45">
-                            <div class="task-number"><span>45</span></div>
-                            <div class="task-content">
-                                <div class="task-name">Subtrahera bråk</div>
-                                <div class="task-time">⏱️ Ca 30 sekunder</div>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- GRUPP 10: Problemlösning -->
-            <div class="task-group">
-                <h3 class="task-group-title">Del 10: Problemlösning</h3>
-                <ul class="task-list">
-                    <li class="task-item">
-                        <a href="uppgift-46-brak-av-heltal.html" class="task-link" id="task-46">
-                            <div class="task-number"><span>46</span></div>
-                            <div class="task-content">
-                                <div class="task-name">Bråk av heltal</div>
-                                <div class="task-time">⏱️ Ca 30 sekunder</div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="task-item">
-                        <a href="uppgift-47-procent-problem.html" class="task-link" id="task-47">
-                            <div class="task-number"><span>47</span></div>
-                            <div class="task-content">
-                                <div class="task-name">Procent-problem</div>
-                                <div class="task-time">⏱️ Ca 30 sekunder</div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="task-item">
-                        <a href="uppgift-48-blanda-procent-brak.html" class="task-link" id="task-48">
-                            <div class="task-number"><span>48</span></div>
-                            <div class="task-content">
-                                <div class="task-name">Blanda procent & bråk</div>
-                                <div class="task-time">⏱️ Ca 30 sekunder</div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="task-item">
-                        <a href="uppgift-49-sannolikhet-problem.html" class="task-link" id="task-49">
-                            <div class="task-number"><span>49</span></div>
-                            <div class="task-content">
-                                <div class="task-name">Sannolikhet-problem</div>
-                                <div class="task-time">⏱️ Ca 30 sekunder</div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="task-item">
-                        <a href="uppgift-50-blandade-problem.html" class="task-link" id="task-50">
-                            <div class="task-number"><span>50</span></div>
-                            <div class="task-content">
-                                <div class="task-name">Blandade problem</div>
-                                <div class="task-time">⏱️ Ca 30 sekunder</div>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- GRUPP 11: Repetition och avslut -->
-            <div class="task-group">
-                <h3 class="task-group-title">Del 11: Repetition och avslut</h3>
-                <ul class="task-list">
-                    <li class="task-item">
-                        <a href="uppgift-51-repetition-brak.html" class="task-link" id="task-51">
-                            <div class="task-number"><span>51</span></div>
-                            <div class="task-content">
-                                <div class="task-name">Repetition: Bråk</div>
-                                <div class="task-time">⏱️ Ca 30 sekunder</div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="task-item">
-                        <a href="uppgift-52-repetition-procent.html" class="task-link" id="task-52">
-                            <div class="task-number"><span>52</span></div>
-                            <div class="task-content">
-                                <div class="task-name">Repetition: Procent</div>
-                                <div class="task-time">⏱️ Ca 30 sekunder</div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="task-item">
-                        <a href="uppgift-53-repetition-decimal.html" class="task-link" id="task-53">
-                            <div class="task-number"><span>53</span></div>
-                            <div class="task-content">
-                                <div class="task-name">Repetition: Decimal</div>
-                                <div class="task-time">⏱️ Ca 30 sekunder</div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="task-item">
-                        <a href="uppgift-54-slutuppgift.html" class="task-link" id="task-54">
-                            <div class="task-number"><span>54</span></div>
                             <div class="task-content">
                                 <div class="task-name">Slutuppgift</div>
                                 <div class="task-time">⏱️ Ca 30 sekunder</div>
@@ -1005,8 +908,8 @@
                         </a>
                     </li>
                     <li class="task-item">
-                        <a href="uppgift-55-grattis.html" class="task-link" id="task-55">
-                            <div class="task-number"><span>55</span></div>
+                        <a href="uppgift-40-grattis.html" class="task-link" id="task-40">
+                            <div class="task-number"><span>40</span></div>
                             <div class="task-content">
                                 <div class="task-name">GRATTIS!</div>
                                 <div class="task-time">🎉 Avslutning</div>
@@ -1017,32 +920,19 @@
             </div>
         </section>
 
-        <!-- TIPS -->
-        <section class="tips-section">
-            <div class="tips-title">Tips för dig, Esther!</div>
-            <ul class="tips-list">
-                <li>Ha papper och penna bredvid dig för uträkningar</li>
-                <li>Läs instruktionerna hela vägen innan du börjar</li>
-                <li>Ta en paus var 20:e minut - det hjälper hjärnan!</li>
-                <li>Det är helt okej att göra fel - vi lär oss av misstag</li>
-            </ul>
-        </section>
     </div>
 
     <!-- PAUS-KNAPP -->
-    <button class="pause-button" onclick="showPause()">
+    <button class="pause-button" id="pause-btn" onclick="showPause()">
         🧘 Jag behöver en paus
     </button>
 
     <!-- PAUS-MODAL -->
     <div class="pause-modal" id="pause-modal">
         <div class="pause-content">
-            <h2>Paus! 🌟</h2>
-            <p>
-                Bra att du tar en paus! Rör på dig lite,
-                andas djupt, eller titta ut genom fönstret.
-                <br><br>
-                Kom tillbaka när du känner dig redo!
+            <h2 id="pause-title">Paus! 🌟</h2>
+            <p id="pause-message">
+                Bra att du tar en paus!
             </p>
             <button class="pause-close" onclick="hidePause()">
                 Jag är redo igen →
@@ -1055,10 +945,10 @@
     </footer>
 
     <script>
-        // === PROGRESS-HANTERING (NYTT SYSTEM) ===
+        // === PROGRESS-HANTERING (KAP3) ===
         function getCompletedTasks() {
             try {
-                const data = localStorage.getItem('esther-completed-tasks');
+                const data = localStorage.getItem('esther-kap3-completed-tasks');
                 return data ? JSON.parse(data) : [];
             } catch(e) {
                 return [];
@@ -1067,7 +957,7 @@
 
         function getSkippedTasks() {
             try {
-                const data = localStorage.getItem('esther-skipped-tasks');
+                const data = localStorage.getItem('esther-kap3-skipped-tasks');
                 return data ? JSON.parse(data) : [];
             } catch(e) {
                 return [];
@@ -1077,7 +967,7 @@
         function updateProgress() {
             const completedTasks = getCompletedTasks();
             const skippedTasks = getSkippedTasks();
-            const total = 55; // Alla 55 uppgifter
+            const total = 40;
             const completedCount = completedTasks.length;
             const percent = (completedCount / total) * 100;
 
@@ -1086,7 +976,7 @@
 
             // Uppdatera tidsuppskattning
             const remaining = total - completedCount;
-            const sessions = Math.ceil(remaining / 20);
+            const sessions = Math.ceil(remaining / 10);
             if (completedCount === 0) {
                 document.getElementById('time-estimate').textContent = 'Du har precis börjat!';
             } else if (remaining <= 5) {
@@ -1143,7 +1033,27 @@
         updateProgress();
 
         // === PAUS-FUNKTIONER ===
+        const pauseButtons = [
+            { btn: "🧘 Ta en paus", title: "Paus! 🌟", msg: "Bra att du tar en paus! Sitt kvar och slappna av." },
+            { btn: "💪 Sträck på armarna", title: "Sträck ut! 💪", msg: "Sträck armarna högt över huvudet och håll i 5 sekunder!" },
+            { btn: "🙆 Rulla axlarna", title: "Rulla axlarna! 🙆", msg: "Rulla axlarna bakåt 5 gånger, sedan framåt 5 gånger." },
+            { btn: "👀 Vila ögonen", title: "Vila ögonen! 👀", msg: "Titta bort från skärmen och fokusera på något långt bort i 20 sekunder." },
+            { btn: "🌬️ Andas djupt", title: "Andas! 🌬️", msg: "Ta 3 djupa andetag - in genom näsan, ut genom munnen." },
+            { btn: "🤸 Vrid på kroppen", title: "Vrid! 🤸", msg: "Sitt kvar och vrid försiktigt överkroppen åt höger, sedan åt vänster." },
+            { btn: "✋ Skaka händerna", title: "Skaka loss! ✋", msg: "Skaka händerna snabbt i 10 sekunder för att få igång blodet!" },
+            { btn: "😊 Le stort", title: "Le! 😊", msg: "Le så stort du kan och håll i 5 sekunder. Det gör dig gladare!" },
+            { btn: "🦒 Sträck på nacken", title: "Sträck nacken! 🦒", msg: "Luta huvudet försiktigt åt höger, håll i 5 sekunder, sedan åt vänster." },
+            { btn: "👊 Knyt händerna", title: "Knyt och släpp! 👊", msg: "Knyt händerna hårt, håll i 3 sekunder, släpp. Upprepa 3 gånger." }
+        ];
+
+        function getRandomPause() {
+            return pauseButtons[Math.floor(Math.random() * pauseButtons.length)];
+        }
+
         function showPause() {
+            const pause = getRandomPause();
+            document.getElementById('pause-title').textContent = pause.title;
+            document.getElementById('pause-message').textContent = pause.msg;
             document.getElementById('pause-modal').classList.add('active');
         }
 

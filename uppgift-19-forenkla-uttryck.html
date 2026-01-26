@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uppgift 19: Förenkla uttryck - Esthers Matte</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Verdana, Geneva, sans-serif; font-size: 18px; line-height: 1.7; background: linear-gradient(135deg, #fdf6f9 0%, #f0f4f8 100%); min-height: 100vh; color: #4a4a4a; }
+        :root { --pastel-pink: #f8e1e8; --pastel-blue: #e1ecf8; --pastel-green: #e1f8e8; --pastel-yellow: #f8f4e1; --text-dark: #4a4a4a; --text-medium: #6a6a6a; --accent-pink: #d4a5b5; --success-green: #98d4a5; --white: #ffffff; }
+        .page-container { display: flex; min-height: 100vh; }
+        .sidebar { width: 220px; background: var(--white); padding: 25px 20px; border-right: 1px solid #eee; position: fixed; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
+        .sidebar-title { font-size: 14px; color: var(--text-medium); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-list { list-style: none; }
+        .nav-item { margin-bottom: 8px; }
+        .nav-link { display: block; padding: 10px 12px; text-decoration: none; color: var(--text-medium); border-radius: 8px; font-size: 14px; transition: all 0.2s; }
+        .nav-link:hover { background: var(--pastel-blue); }
+        .nav-link.current { background: var(--pastel-pink); color: var(--text-dark); font-weight: 600; }
+        .nav-link.completed::before { content: "✓ "; color: var(--success-green); }
+        .you-are-here { font-size: 12px; color: var(--accent-pink); margin-left: 5px; }
+        .main-content { flex: 1; margin-left: 220px; padding: 30px 50px; max-width: 800px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .back-link { color: var(--accent-pink); text-decoration: none; font-size: 15px; }
+        .progress-mini { font-size: 14px; color: var(--text-medium); background: var(--pastel-blue); padding: 8px 15px; border-radius: 20px; }
+        .content-card { background: var(--white); border-radius: 20px; padding: 35px 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .page-title { font-size: 24px; color: var(--text-dark); margin-bottom: 8px; }
+        .page-subtitle { font-size: 15px; color: var(--text-medium); margin-bottom: 25px; }
+        .start-indicator { display: inline-block; background: var(--pastel-green); color: #5a9a6a; padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-bottom: 20px; }
+        .explanation { background: var(--pastel-yellow); border-radius: 15px; padding: 25px; margin-bottom: 25px; }
+        .explanation-text { font-size: 18px; line-height: 1.8; }
+        .highlight-concept { background: #f0e8c8; padding: 2px 8px; border-radius: 5px; font-weight: 600; }
+        .visual-example { text-align: center; margin: 25px 0; }
+        .simplify-box { background: var(--pastel-blue); padding: 25px; border-radius: 15px; display: inline-block; }
+        .simplify-row { display: flex; align-items: center; gap: 15px; margin: 10px 0; font-size: 20px; justify-content: center; }
+        .arrow { color: var(--accent-pink); font-size: 24px; }
+        .visual-note { font-size: 14px; color: var(--text-medium); font-style: italic; margin-top: 15px; }
+        .encouragement { text-align: center; font-size: 16px; color: var(--text-medium); font-style: italic; margin: 20px 0; }
+        .task-section { background: var(--pastel-pink); border-radius: 15px; padding: 25px; margin-top: 25px; }
+        .task-title { font-size: 18px; font-weight: 600; color: var(--text-dark); margin-bottom: 15px; }
+        .task-instruction { font-size: 16px; color: var(--text-medium); margin-bottom: 20px; }
+        .task-question { font-size: 18px; color: var(--text-dark); margin-bottom: 20px; }
+        .answer-options { display: flex; flex-direction: column; gap: 12px; }
+        .answer-btn { background: var(--white); border: 3px solid #ddd; padding: 15px 20px; border-radius: 12px; font-family: Verdana; font-size: 16px; color: var(--text-dark); cursor: pointer; transition: all 0.2s; text-align: left; }
+        .answer-btn:hover { border-color: var(--accent-pink); transform: translateX(5px); }
+        .answer-btn.correct { border-color: var(--success-green); background: #e8f8eb; }
+        .answer-btn.incorrect { border-color: #e8a5a5; background: #f8e8e8; }
+        .answer-btn:disabled { cursor: not-allowed; opacity: 0.7; }
+        .feedback { margin-top: 20px; padding: 15px 20px; border-radius: 10px; display: none; }
+        .feedback.show { display: block; }
+        .feedback.correct { background: var(--pastel-green); color: #4a7a5a; }
+        .feedback.incorrect { background: #f8e8e8; color: #7a4a4a; }
+        .success-section { display: none; text-align: center; margin-top: 25px; padding: 25px; background: var(--pastel-green); border-radius: 15px; }
+        .success-section.show { display: block; }
+        .success-message { font-size: 20px; color: #4a7a5a; margin-bottom: 20px; }
+        .next-btn { background: var(--success-green); color: white; border: none; padding: 15px 35px; border-radius: 30px; font-family: Verdana; font-size: 18px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .next-btn:hover { background: #88c498; }
+        .pause-button { position: fixed; bottom: 30px; right: 30px; background: var(--pastel-green); border: none; padding: 12px 20px; border-radius: 25px; font-family: Verdana; font-size: 14px; color: var(--text-dark); cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .hint-button { background: #b8a5d4; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-family: Verdana; font-size: 14px; cursor: pointer; margin-top: 15px; }
+        .hint-button:disabled { background: #ccc; cursor: not-allowed; }
+        .hint-section { background: linear-gradient(135deg, #efe1f8 0%, #e8d4f4 100%); border-radius: 15px; padding: 20px 25px; margin-top: 20px; border-left: 4px solid #b8a5d4; display: none; }
+        .hint-section.show { display: block; }
+        .hint-step { background: white; border-radius: 10px; padding: 15px; margin-bottom: 10px; border-left: 3px solid #b8a5d4; display: none; }
+        .hint-step.show { display: block; }
+        .hint-step-number { font-size: 12px; color: #9a8aaa; margin-bottom: 5px; font-weight: 600; }
+        .hint-step-text { font-size: 16px; color: var(--text-dark); }
+        .hint-progress { display: flex; gap: 8px; margin-top: 15px; }
+        .hint-dot { width: 10px; height: 10px; border-radius: 50%; background: #d4c5e4; }
+        .hint-dot.active { background: #b8a5d4; }
+        .skip-section { margin-top: 20px; text-align: center; }
+        .skip-btn { background: transparent; border: 2px solid #ddd; color: var(--text-medium); padding: 10px 20px; border-radius: 20px; font-family: Verdana; font-size: 14px; cursor: pointer; }
+        .skip-btn:hover { border-color: #ffb74d; color: #e65100; }
+        .pause-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .pause-modal.active { display: flex; }
+        .pause-content { background: white; padding: 40px; border-radius: 20px; text-align: center; max-width: 400px; }
+        .pause-content h2 { margin-bottom: 15px; }
+        .pause-content p { margin-bottom: 25px; color: var(--text-medium); }
+        .pause-close { background: var(--accent-pink); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-family: Verdana; font-size: 16px; cursor: pointer; }
+
+        /* === STICKY TIPS SIDEBAR === */
+        .tips-sidebar {
+            margin-top: auto;
+            padding-top: 20px;
+        }
+        .tips-sticky-note {
+            background: #fffacd;
+            border-radius: 5px;
+            padding: 18px 15px;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05);
+            transform: rotate(-2deg);
+            position: relative;
+        }
+        .tips-sticky-note::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 15px;
+            background: rgba(200,200,200,0.5);
+            border-radius: 2px;
+        }
+        .tips-sticky-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #5d4e37;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .tips-sticky-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .tips-sticky-list li {
+            font-size: 13px;
+            color: #6b5b47;
+            padding: 6px 0;
+            border-bottom: 1px dashed rgba(0,0,0,0.1);
+            line-height: 1.4;
+        }
+        .tips-sticky-list li:last-child {
+            border-bottom: none;
+        }
+        .nav-list {
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <nav class="sidebar">
+            <div class="sidebar-title">Innehåll</div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="index.html" class="nav-link">← Tillbaka</a></li>
+                <li class="nav-item"><a href="uppgift-17-teckna-med-x.html" class="nav-link" id="nav-17">17. Teckna med x</a></li>
+                <li class="nav-item"><a href="uppgift-18-berakna-varde.html" class="nav-link" id="nav-18">18. Beräkna värde</a></li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link current">19. Förenkla uttryck<span class="you-are-here">← Du är här</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="uppgift-20-flera-variabler.html" class="nav-link" id="nav-20">20. Flera variabler</a>
+                </li>
+            </ul>
+            <!-- STICKY TIPS -->
+            <aside class="tips-sidebar">
+                <div class="tips-sticky-note">
+                    <div class="tips-sticky-title">📝 Tips till Esther</div>
+                    <ul class="tips-sticky-list">
+                        <li>Ha papper och penna bredvid dig</li>
+                        <li>Läs instruktionerna klart först</li>
+                        <li>Ta paus var 20:e minut</li>
+                        <li>Det är okej att göra fel!</li>
+                    </ul>
+                </div>
+            </aside>
+        </nav>
+
+        <main class="main-content">
+            <div class="top-bar">
+                <a href="index.html" class="back-link">← Alla uppgifter</a>
+                <span class="progress-mini">Uppgift 19 av 40</span>
+            </div>
+
+            <div class="content-card">
+                <h1 class="page-title">Förenkla uttryck</h1>
+                <p class="page-subtitle">Slå ihop termer med samma variabel!</p>
+
+                <div class="start-indicator">▶ BÖRJA HÄR</div>
+
+                <div class="explanation">
+                    <p class="explanation-text">
+                        Att <span class="highlight-concept">förenkla</span> betyder att skriva kortare.
+                        <br><br>
+                        Du kan slå ihop termer med samma variabel: 3x + 2x = 5x
+                    </p>
+                </div>
+
+                <div class="visual-example">
+                    <div class="simplify-box">
+                        <p style="font-weight: 600; margin-bottom: 15px;">Exempel:</p>
+                        <div class="simplify-row">
+                            <span>4x + 3x</span>
+                            <span class="arrow">→</span>
+                            <span><strong>7x</strong></span>
+                        </div>
+                        <div class="simplify-row">
+                            <span>5x - 2x</span>
+                            <span class="arrow">→</span>
+                            <span><strong>3x</strong></span>
+                        </div>
+                    </div>
+                    <div class="visual-note">Lägg ihop eller dra ifrån talen framför x!</div>
+                </div>
+
+                <p class="encouragement">
+                    Tänk: 4 stycken x + 3 stycken x = 7 stycken x!
+                </p>
+
+                <div class="task-section">
+                    <h2 class="task-title">✏️ Prova själv!</h2>
+                    <p class="task-instruction">
+                        Förenkla uttrycket.
+                    </p>
+
+                    <p class="task-question">
+                        Vad blir <strong>6x + 2x</strong> förenklat?
+                    </p>
+
+                    <div class="answer-options">
+                        <button class="answer-btn" onclick="checkAnswer(this, false)" data-answer="A">A) 62x</button>
+                        <button class="answer-btn" onclick="checkAnswer(this, true)" data-answer="B">B) 8x</button>
+                        <button class="answer-btn" onclick="checkAnswer(this, false)" data-answer="C">C) 8</button>
+                    </div>
+
+                    <div class="feedback" id="feedback"></div>
+
+                    <button class="hint-button" onclick="showNextHint()">💡 Jag behöver en ledtråd</button>
+
+                    <div class="hint-section" id="hint-section">
+                        <p style="font-style: italic; color: #7a6a8a; margin-bottom: 15px;">Bra att du frågar!</p>
+                        <div class="hint-step" id="hint-1">
+                            <div class="hint-step-number">STEG 1</div>
+                            <p class="hint-step-text">6x betyder "6 stycken x"</p>
+                        </div>
+                        <div class="hint-step" id="hint-2">
+                            <div class="hint-step-number">STEG 2</div>
+                            <p class="hint-step-text">2x betyder "2 stycken x"</p>
+                        </div>
+                        <div class="hint-step" id="hint-3">
+                            <div class="hint-step-number">STEG 3</div>
+                            <p class="hint-step-text">Du har 6x + 2x. Lägg ihop koefficienterna: 6 + 2 = ? Glöm inte x!</p>
+                        </div>
+                        <div class="hint-progress">
+                            <span class="hint-dot" id="dot-1"></span>
+                            <span class="hint-dot" id="dot-2"></span>
+                            <span class="hint-dot" id="dot-3"></span>
+                        </div>
+                    </div>
+
+                    <div class="skip-section">
+                        <button class="skip-btn" onclick="skipTask()">Hoppa över →</button>
+                    </div>
+                </div>
+
+                <div class="success-section" id="success">
+                    <p class="success-message">🎉 Helt rätt! 6x + 2x = 8x!</p>
+                    <a href="uppgift-20-flera-variabler.html" class="next-btn">Nästa uppgift →</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <button class="pause-button" id="pause-btn" onclick="showPause()">🧘 Jag behöver en paus</button>
+
+    <div class="pause-modal" id="pause-modal">
+        <div class="pause-content">
+            <h2 id="pause-title">Paus! 🌟</h2>
+            <p id="pause-message">Bra att du tar en paus!</p>
+            <button class="pause-close" onclick="hidePause()">Jag är redo igen →</button>
+        </div>
+    </div>
+
+    <script>
+        const TASK_NUMBER = 19;
+        const STORAGE_PREFIX = 'esther-kap3';
+        const pageStartTime = Date.now();
+        let hintTimes = [], userAnswers = [], attempts = 0, currentHint = 0;
+        const totalHints = 3;
+
+        function saveTracking(wasCompleted, wasSkipped) {
+            try {
+                let trackingData = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-tracking') || '[]');
+                const existingIndex = trackingData.findIndex(t => t.task === TASK_NUMBER);
+                const data = { task: TASK_NUMBER, timeOnPage: Date.now() - pageStartTime, hintsUsed: currentHint, hintTimes, wasSkipped, attempts, answers: userAnswers, completedAt: wasCompleted ? new Date().toISOString() : null, timestamp: new Date().toISOString() };
+                if (existingIndex > -1) { trackingData[existingIndex] = data; } else { trackingData.push(data); }
+                localStorage.setItem(STORAGE_PREFIX + '-tracking', JSON.stringify(trackingData));
+            } catch(e) {}
+        }
+
+        function showNextHint() {
+            hintTimes.push(Date.now() - pageStartTime);
+            const hintSection = document.getElementById('hint-section');
+            const hintButton = document.querySelector('.hint-button');
+            if (!hintSection.classList.contains('show')) { hintSection.classList.add('show'); }
+            currentHint++;
+            if (currentHint <= totalHints) {
+                document.getElementById('hint-' + currentHint).classList.add('show');
+                document.getElementById('dot-' + currentHint).classList.add('active');
+                if (currentHint < totalHints) { hintButton.innerHTML = '💡 Nästa ledtråd (' + currentHint + '/' + totalHints + ')'; }
+                else { hintButton.innerHTML = '💡 Alla ledtrådar visade'; hintButton.disabled = true; }
+            }
+        }
+
+        function checkAnswer(button, isCorrect) {
+            const feedback = document.getElementById('feedback');
+            const success = document.getElementById('success');
+            const allButtons = document.querySelectorAll('.answer-btn');
+            userAnswers.push(button.dataset.answer);
+            attempts++;
+            allButtons.forEach(btn => btn.disabled = true);
+
+            if (isCorrect) {
+                button.classList.add('correct');
+                feedback.textContent = 'Perfekt! 6 + 2 = 8, så 6x + 2x = 8x!';
+                feedback.className = 'feedback show correct';
+                setTimeout(() => { success.classList.add('show'); markCompleted(TASK_NUMBER); saveTracking(true, false); }, 1000);
+            } else {
+                button.classList.add('incorrect');
+                if (button.dataset.answer === 'A') { feedback.textContent = 'Vi sätter inte ihop siffrorna till 62! Vi adderar: 6 + 2 = 8.'; }
+                else { feedback.textContent = 'Glöm inte x! Svaret är 8x, inte bara 8.'; }
+                feedback.className = 'feedback show incorrect';
+                setTimeout(() => { allButtons.forEach(btn => { if (!btn.classList.contains('incorrect')) btn.disabled = false; }); }, 1500);
+            }
+        }
+
+        function skipTask() { markSkipped(TASK_NUMBER); saveTracking(false, true); window.location.href = 'uppgift-20-flera-variabler.html'; }
+
+        function markCompleted(taskNumber) {
+            let completed = [];
+            try { completed = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-completed-tasks') || '[]'); } catch(e) {}
+            if (!completed.includes(taskNumber)) { completed.push(taskNumber); localStorage.setItem(STORAGE_PREFIX + '-completed-tasks', JSON.stringify(completed)); }
+            let skipped = [];
+            try { skipped = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-skipped-tasks') || '[]'); } catch(e) {}
+            const idx = skipped.indexOf(taskNumber);
+            if (idx > -1) { skipped.splice(idx, 1); localStorage.setItem(STORAGE_PREFIX + '-skipped-tasks', JSON.stringify(skipped)); }
+        }
+
+        function markSkipped(taskNumber) {
+            let completed = [];
+            try { completed = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-completed-tasks') || '[]'); } catch(e) {}
+            if (completed.includes(taskNumber)) return;
+            let skipped = [];
+            try { skipped = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-skipped-tasks') || '[]'); } catch(e) {}
+            if (!skipped.includes(taskNumber)) { skipped.push(taskNumber); localStorage.setItem(STORAGE_PREFIX + '-skipped-tasks', JSON.stringify(skipped)); }
+        }
+
+        (function updateNav() {
+            try {
+                const completed = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-completed-tasks') || '[]');
+                if (completed.includes(17)) document.getElementById('nav-17').classList.add('completed');
+                if (completed.includes(18)) document.getElementById('nav-18').classList.add('completed');
+            } catch(e) {}
+        })();
+
+        window.addEventListener('beforeunload', function() { if (!document.getElementById('success').classList.contains('show')) saveTracking(false, false); });
+
+        const pauseButtons = [
+            { btn: "🧘 Ta en paus", title: "Paus! 🌟", msg: "Bra att du tar en paus! Sitt kvar och slappna av." },
+            { btn: "💪 Sträck på armarna", title: "Sträck ut! 💪", msg: "Sträck armarna högt över huvudet och håll i 5 sekunder!" },
+            { btn: "🙆 Rulla axlarna", title: "Rulla axlarna! 🙆", msg: "Rulla axlarna bakåt 5 gånger, sedan framåt 5 gånger." },
+            { btn: "👀 Vila ögonen", title: "Vila ögonen! 👀", msg: "Titta bort från skärmen och fokusera på något långt bort i 20 sekunder." },
+            { btn: "🌬️ Andas djupt", title: "Andas! 🌬️", msg: "Ta 3 djupa andetag - in genom näsan, ut genom munnen." },
+            { btn: "🤸 Vrid på kroppen", title: "Vrid! 🤸", msg: "Sitt kvar och vrid försiktigt överkroppen åt höger, sedan åt vänster." },
+            { btn: "✋ Skaka händerna", title: "Skaka loss! ✋", msg: "Skaka händerna snabbt i 10 sekunder för att få igång blodet!" },
+            { btn: "😊 Le stort", title: "Le! 😊", msg: "Le så stort du kan och håll i 5 sekunder. Det gör dig gladare!" },
+            { btn: "🦒 Sträck på nacken", title: "Sträck nacken! 🦒", msg: "Luta huvudet försiktigt åt höger, håll i 5 sekunder, sedan åt vänster." },
+            { btn: "👊 Knyt händerna", title: "Knyt och släpp! 👊", msg: "Knyt händerna hårt, håll i 3 sekunder, släpp. Upprepa 3 gånger." }
+        ];
+
+        function getRandomPause() {
+            return pauseButtons[Math.floor(Math.random() * pauseButtons.length)];
+        }
+
+        function showPause() {
+            const pause = getRandomPause();
+            document.getElementById('pause-title').textContent = pause.title;
+            document.getElementById('pause-message').textContent = pause.msg;
+            document.getElementById('pause-modal').classList.add('active');
+        }
+
+        function hidePause() {
+            document.getElementById('pause-modal').classList.remove('active');
+        }
+
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') hidePause(); });
+    </script>
+</body>
+</html>
